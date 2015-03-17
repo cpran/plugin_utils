@@ -1,0 +1,106 @@
+# Format-free time
+#
+# Provides:
+#
+# time.dw    = day of the week           (1-7)
+# time.dw$   = day of the week as string ("Mon", ...)
+# time.dm    = day of the month          (1-31)
+# time.mo    = month                     (1-12)
+# time.mo$   = month as string           ("Jan", ...)
+# time.yr    = year                      (Gregorian)
+# time.tm$   = time as string            ("00:00:00")
+# time.hr    = hours                     (0-24)
+# time.mn    = minutes                   (0-60)
+# time.sc    = seconds                   (0-60)
+# time.date$ = the full standard Praat date
+#
+# Written by Jose J. Atria (3 July 2014)
+#
+# This script is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# A copy of the GNU General Public License is available at
+# <http://www.gnu.org/licenses/>.
+
+include ../procedures/utils.proc
+
+procedure time ()
+  .date$ = date$()
+  @parseTime(.date$)
+  .dw  = parseTime.dw
+  .dw$ = parseTime.dw$
+  .dm  = parseTime.dm
+  .mo  = parseTime.mo
+  .mo$ = parseTime.mo$
+  .yr  = parseTime.yr
+  .tm$ = parseTime.tm$
+  .hr  = parseTime.hr
+  .mn  = parseTime.mn
+  .sc  = parseTime.sc
+endproc
+
+procedure parseTime (.date$)
+  # Fri Jul 18 18:41:33 2014
+  @split(" ", .date$)
+  if split.length != 5
+    exitScript: "Unexpected output from date$()!"
+  endif
+  .days$   = "Mon Tue Wed Thu Fri Sat Sun"
+  .months$ = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec"
+
+  .dw$ = split.return$[1]        ; "Fri"
+  .dw = index(.days$, .dw$)
+  .dw = if .dw > 0 then ((.dw - 1) / 4) + 1 else .dw fi
+
+  .mo$ = split.return$[2]        ; "Jul"
+  .mo = index(.months$, .mo$)
+  .mo = if .mo > 0 then ((.mo - 1) / 4) + 1 else .mo fi
+
+  .dm  = number(split.return$[3]); 18
+  .tm$ =        split.return$[4] ; "18:41:33"
+  .yr  = number(split.return$[5]); 2014
+
+  @split(":", .tm$)
+  if split.length != 3
+    exitScript: "Unexpected time format from date$()!"
+  endif
+
+  .hr = number(split.return$[1]) ; 18
+  .mn = number(split.return$[2]) ; 41
+  .sc = number(split.return$[3]) ; 33
+endproc
+
+# Not working, and not sure if this needs to be here at all.
+procedure str2time (.date$)
+  @parseTime(.date$)
+  .time  = time.sc
+  .time += time.mn * 60
+  .time += time.hr * 3600
+
+  @_IsLeapYear(parseTime.yr)
+  .days_per_month$ = if '_IsLeapYear.return'
+    ... then "31 59 90 120 151 181 212 243 273 304 334 365"
+    ... else "31 60 91 121 152 182 213 244 274 305 335 366" fi
+  @split(" ", .days_per_month$)
+
+  if (parseTime.yr >= 1 and parseTime.yr <= 9999) and
+    ... (parseTime.mo >= 1 and parseTime.mo <= 12)
+    .previous_year = parseTime.yr - 1
+    .previous_days = ((.previous_year * 365) + (.previous_year / 4)) -
+      ... ((.previous_year / 100) + (.previous_year / 400))
+    .total_days = ((.previous_days + number(split.return$[parseTime.mo-1])) +
+      ... parseTime.dm) - 1
+  endif
+  .return = .total_days
+endproc
+
+procedure _IsLeapYear (.year)
+  if .year < 1 or .year > 9999
+    existScript: "Year out of bounds: ", .year
+  endif
+  .return = 1
+  .return = if .year mod  4 != 0 then 0 else .return fi
+  .return = if .year mod 100 = 0 then .year mod 400 = 0 else .return fi
+endproc
