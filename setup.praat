@@ -19,7 +19,6 @@
 # runScript: "run_tests.praat"
 
 # Base menu
-Add menu command: "Objects", "Praat", "CPrAN", "",      0, ""
-Add menu command: "Objects", "Praat", "Utils", "CPrAN", 1, ""
+Add menu command: "Objects", "Praat", "utils", "CPrAN", 1, ""
 
-Add menu command: "Objects", "Praat", "Save selected objects...", "Utils", 1, "management/save_all.praat"
+Add menu command: "Objects", "Praat", "Save selected objects...", "utils", 2, "management/save_all.praat"
