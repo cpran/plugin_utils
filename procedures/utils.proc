@@ -69,7 +69,7 @@ endproc
 # it can be used to count occurences as well.
 #
 procedure split (.sep$, .str$)
-  .seplen = length(.sep$) 
+  .seplen = length(.sep$)
   .length = 0
   repeat
     .strlen = length(.str$)
@@ -141,6 +141,6 @@ procedure zeropad (.n, .length)
 endproc
 
 procedure toLower (.string$)
-  .return$ = replace_regex$(.string$, "(.*)", "\L\1", 0)  
+  .return$ = replace_regex$(.string$, "(.*)", "\L\1", 0)
 endproc
 

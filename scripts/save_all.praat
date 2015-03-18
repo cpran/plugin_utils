@@ -87,7 +87,7 @@ for type to total_types
       id = Object_'same_name'[same, "id"]
       selectObject: writable_objects
       row = Search column: "id", string$(id)
-      new_name$ = if repeated > 1 then 
+      new_name$ = if repeated > 1 then
         ... this_name$ + "." + string$(same) else this_name$ fi
       Set string value: row, "new_name", new_name$
     endfor
