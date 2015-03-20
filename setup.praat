@@ -15,8 +15,12 @@
 
 ## Static commands:
 
-# Uncomment next line to run tests at startup
-# runScript: "run_tests.praat"
+# Run tests
+if fileReadable(preferencesDirectory$ + "/plugin_testsimple")
+  runScript: preferencesDirectory$ + "/plugin_testsimple/scripts/run_tests.praat", defaultDirectory$ + "/tests"
+else
+  appendInfoLine: "W: unable to run tests for plugin_utils: testsimple not installed"
+endif
 
 # Base menu
 Add menu command: "Objects", "Praat", "utils", "CPrAN", 1, ""
