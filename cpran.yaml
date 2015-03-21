@@ -1,0 +1,24 @@
+---
+Plugin: utils
+Homepage: https://gitlab.com/cpran/plugin_utils
+Version: 0.0.1
+Maintainer: José Joaquín Atria <jjatria@gmail.com>
+Depends:
+  - praat: 5.0.0+
+Recommends:
+License: GPL3
+Readme: readme.md
+Description:
+  - Short: a collection of basic utilities to facilitate scripting
+  - Long: >
+      This plugin provides a series of procedures to facilitate some scripting
+      tasks:
+
+      * Directory and file GUI selectors for initial forms
+      * A method to require specific versions of Praat
+      * Procedures for format-free date manipulation
+      * `split`
+      * `pwgen`
+      * `mktmp`
+      * `zeropad`
+      * `toLower`
