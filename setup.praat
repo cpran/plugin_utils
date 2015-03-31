@@ -16,8 +16,8 @@
 ## Static commands:
 
 # Run tests
-if fileReadable(preferencesDirectory$ + "/plugin_testsimple")
-  runScript: preferencesDirectory$ + "/plugin_testsimple/scripts/run_tests.praat", defaultDirectory$ + "/tests"
+if fileReadable(preferencesDirectory$ + "/plugin_testsimple/scripts/run.praat")
+  runScript: preferencesDirectory$ + "/plugin_testsimple/scripts/run.praat", defaultDirectory$ + "/t"
 else
   appendInfoLine: "W: unable to run tests for plugin_utils: testsimple not installed"
 endif
