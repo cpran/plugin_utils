@@ -1,4 +1,4 @@
-include ../procedures/utils.proc
+include ../../plugin_utils/procedures/utils.proc
 
 if praatVersion < 5346
   exit This script requires Praat v.5.3.46. Please update Praat.'newline$'
