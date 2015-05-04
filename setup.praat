@@ -15,13 +15,6 @@
 
 ## Static commands:
 
-# Run tests (disabled while testing test harness)
-# if fileReadable(preferencesDirectory$ + "/plugin_testsimple/scripts/run.praat")
-#   runScript: preferencesDirectory$ + "/plugin_testsimple/scripts/run.praat", defaultDirectory$ + "/t"
-# else
-#   appendInfoLine: "W: unable to run tests for plugin_utils: testsimple not installed"
-# endif
-
 # Base menu
 Add menu command: "Objects", "Praat", "utils", "CPrAN", 1, ""
 
