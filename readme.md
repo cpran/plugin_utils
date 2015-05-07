@@ -18,4 +18,4 @@ This plugin defines a number of general utilities:
 Requirements
 ------------
 
-None
+* `testsimple`
