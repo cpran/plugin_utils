@@ -1,0 +1,145 @@
+# Procedures to convert to and from base-n numbers
+#
+# Author: Jose Joaquin Atria
+# Initial release: October 24, 2014
+#
+# This script is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation, either version 3 of
+# the License, or (at your option) any later version.
+#
+# A copy of the GNU General Public License is available at
+# <http://www.gnu.org/licenses/>.
+
+# Parse a string as a hexadecimal number
+# The result is stored in .n
+#
+procedure hex2dec: .str$
+  # Normalize hexadecimal string: no leading hash, lowercase.
+  .hex$ = replace$ (.str$, "#", "", 0)
+
+  @n2dec(.hex$, 16)
+  .n = n2dec.n
+endproc
+
+# Parse a string as an octal number
+# The result is stored in .n
+#
+procedure oct2dec: .str$
+  @n2dec(.str$, 8)
+  .n = n2dec.n
+endproc
+
+# Parse a string as a binary number
+# The result is stored in .n
+#
+procedure bin2dec: .str$
+  @n2dec(.str$, 2)
+  .n = n2dec.n
+endproc
+
+# Parse an integer and return an hexadecimal string representation of it
+# The result is stored in .n$
+#
+procedure dec2hex: .int
+  @dec2n(.int, 16)
+  .n$ = dec2n.n$
+endproc
+
+# Parse an integer and return an octal string representation of it
+# The result is stored in .n$
+#
+procedure dec2oct: .int
+  @dec2n(.int, 8)
+  .n$ = dec2n.n$
+endproc
+
+# Parse an integer and return a binary string representation of it
+# The result is stored in .n$
+#
+procedure dec2bin: .int
+  @dec2n(.int, 2)
+  .n$ = dec2n.n$
+endproc
+
+# Parse a string as an base-n number
+# The result is stored in .n
+#
+procedure n2dec: .str$, .base
+  .digits$ = left$("0123456789abcdefghijklmnopqrstuvwxyz", .base)
+  .str$ = replace_regex$(.str$, "(.)", "\L\1", 0)
+
+  if index_regex (.str$, "[^-" + .digits$ + ".]")
+      .n = undefined
+      appendInfoLine: "Not a valid base-", .base, " number: ", .str$
+  else
+    if left$(.str$) = "-"
+      .sign = -1
+      .str$ = right$(.str$, length(.str$) - 1)
+    else
+      .sign = 1
+    endif
+
+    # Process integer part
+    .int = 0
+    .rational = index(.str$, ".")
+    .int$ = if .rational then left$(.str$, .rational-1) else .str$ fi
+    .len = length(.int$)
+    for .j from 0 to .len-1
+      .i = .len - .j
+      .c$ = mid$(.int$, .i, 1)
+      .value = index(.digits$, .c$) - 1
+      .int += .value * (.base ^ .j)
+    endfor
+
+    .frac = 0
+    if .rational
+      #process rational part
+      .radix = .rational
+      .len = length(.str$)
+      .frac$ = right$(.str$, .len - .radix)
+      .len = length(.frac$)
+      for .i to .len
+        .c$ = mid$(.frac$, .i, 1)
+        .value = index(.digits$, .c$) - 1
+        .frac += .value * (1 / (.base ^ .i))
+      endfor
+    endif
+    .n = .sign * (.int + .frac)
+  endif
+endproc
+
+# Parse an integer and return a string representation of it in base-n
+# The result is stored in .n$
+#
+procedure dec2n: .arg, .base
+  .digits$ = left$("0123456789abcdefghijklmnopqrstuvwxyz", .base)
+  .n$ = ""
+
+  .n = abs(.arg)
+  repeat
+    .integer = .n div .base
+    .remainder = .n mod .base
+    .n$ = mid$(.digits$, .remainder + 1, 1) + .n$
+    .n = .integer
+  until !.integer
+
+  .rational = abs(.arg) mod 1
+  if .rational
+    .n$ = .n$ + "."
+    repeat
+      .rational *= .base
+      .integer = .rational div 1
+      .n$ = .n$ + mid$(.digits$, .integer + 1, 1)
+      .rational -= .integer
+    until !.rational
+  endif
+
+  .n$ = if .arg < 0 then "-" + .n$ else .n$ fi
+endproc
+
+# For backwards compatibility
+procedure parseHex: .str$
+  @n2dec(.str$, 16)
+  .n = n2dec.n
+endproc
