@@ -128,6 +128,7 @@ procedure mktemp (.template$)
   else
     pauseScript: "Template must have at least three random placeholders at end."
   endif
+  .return$ = .name$
 endproc
 
 procedure zeropad (.n, .length)
