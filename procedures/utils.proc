@@ -145,3 +145,6 @@ procedure toLower (.string$)
   .return$ = replace_regex$(.string$, "(.*)", "\L\1", 0)
 endproc
 
+procedure toUpper (.string$)
+  .return$ = replace_regex$(.string$, "(.*)", "\U\1", 0)
+endproc
