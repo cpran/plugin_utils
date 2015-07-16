@@ -1,4 +1,4 @@
-utils
+utils [![build badge][badge]][build]
 =====
 
 Description
@@ -19,3 +19,6 @@ Requirements
 ------------
 
 * `testsimple`
+
+[badge]: https://ci.gitlab.com/projects/2840/status.png?ref=master
+[build]: https://ci.gitlab.com/projects/2840
