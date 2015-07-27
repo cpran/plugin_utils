@@ -120,7 +120,7 @@ procedure dec2n: .arg, .base
   repeat
     .integer = .n div .base
     .remainder = .n mod .base
-    .n$ = mid$(.digits$, .remainder + 1, 1) + .n$
+    .n$ = mid$(.digits$, floor(.remainder) + 1, 1) + .n$
     .n = .integer
   until !.integer
 
