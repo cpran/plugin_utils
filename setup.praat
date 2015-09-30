@@ -19,3 +19,4 @@
 nocheck Add menu command... "Objects" "Praat" "utils" "CPrAN" 1
 
 nocheck Add menu command... "Objects" "Praat" "Save selected objects..." "utils" 2 scripts/save_all.praat
+nocheck Add menu command... "Objects" "Praat" "Rename (regex)..." "utils" 2 scripts/rename_regex.praat
