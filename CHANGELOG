@@ -1,0 +1,25 @@
+- v0.0.11:
+  - Added script to rename objects with regular expressions
+  - Added this changelog
+- v0.0.10:
+  - Fixed broken tests for date() in Windows
+- v0.0.9:
+  - Setup now uses shorthand
+  - Bug fix for dec2oct and dec2hex
+- v0.0.8:
+  - GUI modification from setup now uses nocheck
+  - Re-enabled continuous integration
+- v0.0.7:
+  - Added toUpper
+- v0.0.6:
+  - Added base-conversion procedures
+- v0.0.5:
+  - Reorganised and numbered tests
+- v0.0.4:
+  - Tests no longer run from setup.praat
+- v0.0.3:
+  - Fixed bug with single digit dates
+- v0.0.2:
+  - Fixed buggy calls to test battery
+- v0.0.1:
+  - Initial release, inherited from JJATools
