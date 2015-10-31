@@ -124,6 +124,7 @@ procedure mktemp (.template$)
     until .attempts > 100 or !fileReadable(.name$)
 
     .name$ = if right$(.name$) != "/" then .name$ + "/" else .name$ fi
+    .name$ = replace_regex$(.name$, "^~", homeDirectory$, 0)
     createDirectory: .name$
   else
     pauseScript: "Template must have at least three random placeholders at end."

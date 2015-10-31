@@ -17,5 +17,7 @@ procedure checkDirectory (.name$, .label$)
   if .name$ = ""
     exit
   endif
+  .name$ = replace_regex$(.name$, "^~", homeDirectory$, 0)
+  .name$ = replace_regex$(.name$, "\\", "/", 0)
   .name$ = if right$(.name$, 1) != "/" then .name$ + "/" else .name$ fi
 endproc
