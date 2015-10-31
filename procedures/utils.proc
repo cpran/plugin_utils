@@ -148,3 +148,18 @@ endproc
 procedure toUpper (.string$)
   .return$ = replace_regex$(.string$, "(.*)", "\U\1", 0)
 endproc
+
+procedure normalPrefDir ()
+  .old$ = preferencesDirectory$
+  preferencesDirectory$ = replace_regex$(preferencesDirectory$, "(con)?(\.(EXE|exe))?$", "", 0)
+  preferencesDirectory$ = replace_regex$(preferencesDirectory$, "^~", homeDirectory$, 0)
+  preferencesDirectory$ = replace_regex$(preferencesDirectory$, "\\", "/", 0)
+  preferencesDirectory$ = preferencesDirectory$ +
+    ... if right$(preferencesDirectory$) != "/" then "/" else "" fi
+endproc
+
+procedure restorePrefDir ()
+  if variableExists("normalPrefDir.old$")
+    preferencesDirectory$ = normalPrefDir.old$
+  endif
+endproc
