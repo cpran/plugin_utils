@@ -116,7 +116,6 @@ procedure mktemp (.template$)
     .base$ = left$(.template$, .number - 1)
     .random_length = length(.template$) - (.number - 1)
 
-    # appendInfoLine: "mktemp with ", .base$, " and ", .random_length, " random characters"
     repeat
       .attempts += 1
       @pwgen(.random_length)
