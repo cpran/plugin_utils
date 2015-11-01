@@ -25,9 +25,8 @@
 #
 # Copyright 2014, 2015 Jose Joaquin Atria
 
-include ../../plugin_selection/procedures/selection.proc
-include ../procedures/check_directory.proc
-include ../procedures/require.proc
+include ../../plugin_utils/procedures/check_directory.proc
+include ../../plugin_utils/procedures/require.proc
 @require("5.3.63")
 
 form Save selected objects...
@@ -40,9 +39,24 @@ endform
 save_to$ = checkDirectory.name$
 
 # Save selection
-@saveSelectionTable()
-original = saveSelectionTable.table
-
+total_objects = numberOfSelected()
+for i to total_objects
+  my_object[i] = selected(i)
+endfor
+original = Create Table with column names: "selection", 0, "name type n id"
+for i to total_objects
+  this_object = selectObject(my_object[i])
+  type$ = extractWord$(selected$(), "")
+  name$ = selected$(type$)
+  id    = selected()
+  selectObject(original)
+  Append row
+  row = Object_'original'.nrow
+  Set string value:  row, "name", name$
+  Set string value:  row, "type", type$
+  Set numeric value: row, "id",   id
+  Set numeric value: row, "n",    1
+endfor
 selectObject: original
 
 # LongSound objects are already on disk, so it makes no sense to save them
@@ -137,5 +151,8 @@ for i to Object_'writable_objects'.nrow
 endfor
 removeObject: writable_objects
 
-@restoreSavedSelection(original)
+nocheck selectObject(undefined)
+for i to Object_'original'.nrow
+  plusObject(Object_'original'[i, "id"])
+endfor
 removeObject: original
