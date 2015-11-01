@@ -1,7 +1,4 @@
-# Save all selected objects to disk. By default, the script overwrites
-# existing files and prints the number of saved objects to the Info
-# screen. This behaviour can be changed by modifying the overwrite and
-# verbose variables respectively.
+# Save all selected objects to disk.
 #
 # The first version of this script was written for the
 # Laboratorio de Fonetica Letras UC
@@ -27,6 +24,7 @@
 
 include ../../plugin_utils/procedures/check_directory.proc
 include ../../plugin_utils/procedures/require.proc
+include ../../plugin_utils/procedures/utils.proc
 @require("5.3.63")
 
 form Save selected objects...
@@ -45,11 +43,11 @@ for i to total_objects
 endfor
 original = Create Table with column names: "selection", 0, "name type n id"
 for i to total_objects
-  this_object = selectObject(my_object[i])
+  selectObject: my_object[i]
   type$ = extractWord$(selected$(), "")
   name$ = selected$(type$)
   id    = selected()
-  selectObject(original)
+  selectObject: original
   Append row
   row = Object_'original'.nrow
   Set string value:  row, "name", name$
@@ -130,6 +128,10 @@ for i to Object_'writable_objects'.nrow
   # Despite padding, that file already exists
   # Ask for a new one, or overwrite
   filename$ = name$ + extension$
+  @hasGUI()
+  if !hasGUI.return
+    overwrite = 1
+  endif
   if !overwrite and fileReadable(save_to$ + filename$)
     beginPause: "File exists"
     comment: "A new name for this object was generated, but it already exists on disk"
@@ -153,6 +155,6 @@ removeObject: writable_objects
 
 nocheck selectObject(undefined)
 for i to Object_'original'.nrow
-  plusObject(Object_'original'[i, "id"])
+  plusObject: Object_'original'[i, "id"]
 endfor
 removeObject: original

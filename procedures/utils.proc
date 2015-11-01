@@ -169,6 +169,33 @@ procedure toUpper (.string$)
   .return$ = replace_regex$(.string$, "(.*)", "\U\1", 0)
 endproc
 
+# Check if the running version of Praat has access to GUI commands
+# .return will be assigned to 1 if there are GUI commands, or 0
+# otherwise.
+#
+procedure hasGUI ()
+  .total = numberOfSelected()
+  for .i to .total
+    .original[.i] = selected(.i)
+  endfor
+
+  .obj = Create TextGrid: 0, 1, "test", ""
+  .editor = nocheck View & Edit
+  if .editor != undefined
+    editor: .editor
+      nocheck Close
+    endeditor
+    .return = 1
+  else
+    .return = 0
+  endif
+
+  nocheck Remove
+  for .i to .total
+    plusObject: .original[.i]
+  endfor
+endproc
+
 # Normalise the preferences directory, so that it has a predictable
 # name across platforms.
 #
