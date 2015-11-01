@@ -1,14 +1,23 @@
 # Praat utils
 #
-# Author:  Jose Joaquin Atria
+# This script is part of the utils CPrAN plugin for Praat.
+# The latest version is available through CPrAN or at
+# <http://cpran.net/plugins/utils>
 #
-# This script is free software: you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation, either version 3 of
-# the License, or (at your option) any later version.
+# The utils plugin is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public
+# License as published by the Free Software Foundation, either
+# version 3 of the License, or (at your option) any later version.
 #
-# A copy of the GNU General Public License is available at
-# <http://www.gnu.org/licenses/>.
+# The utils plugin is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with utils. If not, see <http://www.gnu.org/licenses/>.
+#
+# Copyright 2014, 2015 Jose Joaquin Atria
 
 # Extremely limited version of pwgen(1). Currently, unlike the traditional
 # command, this procedure does not strive for legibility, and acts simply as an
@@ -88,6 +97,8 @@ procedure split (.sep$, .str$)
   until .sep = 0
 endproc
 
+# Returns the number of occurences of a given character in a string
+#
 procedure numchar (.str$, .tgt$)
   .pos = index(.str$, .tgt$)
   .tgtlen = length(.tgt$)
@@ -103,6 +114,8 @@ procedure numchar (.str$, .tgt$)
   endwhile
 endproc
 
+# Create a temporary directory that is guaranteed not to exist
+#
 procedure mktemp (.template$)
   if .template$ = ""
     .template$ = "tmp.XXXXXXXXXX"
@@ -131,6 +144,9 @@ procedure mktemp (.template$)
   .return$ = .name$
 endproc
 
+# Pad a number with zeroes to the left.
+# Make sure that the .length is large enough to hold the padded string!
+#
 procedure zeropad (.n, .length)
   .n$ = string$(abs(.n))
   .sign$ = if .n < 0 then "-" else "" fi
@@ -141,14 +157,21 @@ procedure zeropad (.n, .length)
   .return$ = .sign$ + right$(.pad$ + .n$, .length)
 endproc
 
+# Convert a string to lower-case
+#
 procedure toLower (.string$)
   .return$ = replace_regex$(.string$, "(.*)", "\L\1", 0)
 endproc
 
+# Convert a string to upper-case
+#
 procedure toUpper (.string$)
   .return$ = replace_regex$(.string$, "(.*)", "\U\1", 0)
 endproc
 
+# Normalise the preferences directory, so that it has a predictable
+# name across platforms.
+#
 procedure normalPrefDir ()
   .old$ = preferencesDirectory$
   preferencesDirectory$ = replace_regex$(preferencesDirectory$, "(con)?(\.(EXE|exe))?$", "", 0)
@@ -158,6 +181,9 @@ procedure normalPrefDir ()
     ... if right$(preferencesDirectory$) != "/" then "/" else "" fi
 endproc
 
+# Restore the original preferences directory, before normalisation.
+# See normalPrefDir().
+#
 procedure restorePrefDir ()
   if variableExists("normalPrefDir.old$")
     preferencesDirectory$ = normalPrefDir.old$
