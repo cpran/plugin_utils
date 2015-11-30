@@ -1,7 +1,7 @@
 include ../../plugin_testsimple/procedures/test_simple.proc
 include ../procedures/utils.proc
 
-@plan(14)
+@plan(19)
 
 @find: "tmp.*", "tmp\.[a-z0-9]{10}"
 @ok: !find.return,
