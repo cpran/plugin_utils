@@ -97,21 +97,61 @@ procedure split (.sep$, .str$)
   until .sep = 0
 endproc
 
-# Returns the number of occurences of a given character in a string
+# Returns the number of occurences of a given character in a string (deprecated)
 #
 procedure numchar (.str$, .tgt$)
-  .pos = index(.str$, .tgt$)
-  .tgtlen = length(.tgt$)
-  .return = 0
-  .substr$ = .str$
-  while .pos
-    .strlen = length(.substr$)
-    .pos = index(.substr$, .tgt$)
-    if .pos
-      .return += 1
-    endif
-    .substr$ = right$(.str$, .strlen - (.pos + .tgtlen) + 1)
-  endwhile
+  appendInfoLine: "numchar is deprecated, use strcount instead"
+  @strcount: .str$, .tgt$
+  .return = strcount.return
+endproc
+
+# Returns the number of occurences of a given string in another string
+#
+procedure strcount (.str$, .tgt$)
+  if .tgt$ != ""
+    .pos = index(.str$, .tgt$)
+    .tgtlen = length(.tgt$)
+    .return = 0
+    .substr$ = .str$
+    while .pos
+      .strlen = length(.substr$)
+      .pos = index(.substr$, .tgt$)
+      if .pos
+        .return += 1
+      endif
+      .substr$ = right$(.str$, .strlen - (.pos + .tgtlen) + 1)
+    endwhile
+  else
+    # Tme empty string can always be found, but it doesn't make
+    # sense to count it
+    .return = 1
+  endif
+endproc
+
+# Returns the number of matches of a given regular expression pattern in a
+# string
+#
+procedure strcount_regex (.str$, .ptn$)
+  if .ptn$ != ""
+    .pos = index_regex(.str$, .ptn$)
+    .found$ = replace_regex$(.str$, ".*?(" + .ptn$ + ").*", "\1", 0)
+    .return = 0
+    .substr$ = .str$
+    while .pos
+      .string_length = length(.substr$)
+      .pos = index_regex(.substr$, .ptn$)
+      if .pos
+        .return += 1
+      endif
+      .found$ = replace_regex$(.substr$, ".*?(" + .ptn$ + ").*", "\1", 0)
+      .match_length = length(.found$)
+      .substr$ = right$(.str$, .string_length - (.pos + .match_length) + 1)
+    endwhile
+  else
+    # Tme empty string can always be found, but it doesn't make
+    # sense to count it
+    .return = 1
+  endif
 endproc
 
 # Create a temporary directory that is guaranteed not to exist
@@ -138,8 +178,40 @@ procedure mktemp (.template$)
     .name$ = if right$(.name$) != "/" then .name$ + "/" else .name$ fi
     .name$ = replace_regex$(.name$, "^~", homeDirectory$, 0)
     createDirectory: .name$
-  else
-    pauseScript: "Template must have at least three random placeholders at end."
+  endif
+  .return$ = .name$
+endproc
+
+# Create a temporary directory that is guaranteed not to exist
+#
+procedure mktempfile (.template$, .extension$)
+  if .template$ = ""
+    .template$ = "tmp.XXXXXXXXXX"
+  endif
+  if left$(.extension$) == "."
+    .extension$ = right$(.extension$, length(.extension$) - 1)
+  endif
+
+  .number = index_regex(.template$, "X{3}$")
+  .name$ = "--undefined--"
+  if .number
+    .number = index_regex(.template$, "X+$")
+    .attempts = 0
+    .base$ = left$(.template$, .number - 1)
+    .random_length = length(.template$) - (.number - 1)
+
+    repeat
+      .attempts += 1
+      @pwgen(.random_length)
+      .name$ = preferencesDirectory$ + "/" + .base$ + pwgen.return$
+      if .extension$ != ""
+        .name$ = .name$ + "." + .extension$
+      endif
+    until .attempts > 100 or !fileReadable(.name$)
+
+    .random$ = pwgen.return$
+    .name$ = replace_regex$(.name$, "^~", homeDirectory$, 0)
+    writeFile: .name$, ""
   endif
   .return$ = .name$
 endproc
