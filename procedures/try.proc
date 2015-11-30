@@ -1,0 +1,72 @@
+# This script is part of the utils CPrAN plugin for Praat.
+# The latest version is available through CPrAN or at
+# <http://cpran.net/plugins/utils>
+#
+# The utils plugin is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public
+# License as published by the Free Software Foundation, either
+# version 3 of the License, or (at your option) any later version.
+#
+# The utils plugin is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with utils. If not, see <http://www.gnu.org/licenses/>.
+#
+# Copyright 2014, 2015 Jose Joaquin Atria
+
+include ../../plugin_utils/procedures/utils.proc
+
+# Execute Praat code with an isolated interpreter
+# and provide a boolean value with the exit status of
+# that code.
+#
+procedure try .src$
+  .return = 0
+
+  # Code is isolated into a separate file
+  @mktempfile: "try_praat_XXXXXX", ".praat"
+  .tmp$ = mktempfile.name$
+  .rnd$ = mktempfile.random$
+
+  # runScript assignes the ID of the only selected object on success
+  # but for this, one and only one object must be selected.
+  # A selection table is used to reduce this selection to a single object.
+  writeFileLine: .tmp$, .src$
+  appendFileLine: .tmp$, ""
+  appendFileLine: .tmp$, "n = numberOfSelected()"
+  appendFileLine: .tmp$, "for i to n"
+  appendFileLine: .tmp$, "  id[i] = selected(i)"
+  appendFileLine: .tmp$, "endfor"
+  appendFileLine: .tmp$, "table = Create Table with column names: """ + .rnd$ + """, 0,"
+  appendFileLine: .tmp$, "  ... ""type name n id"""
+  appendFileLine: .tmp$, "for i to n"
+  appendFileLine: .tmp$, "  selectObject: id[i]"
+  appendFileLine: .tmp$, "  type$ = extractWord$(selected$(), """")"
+  appendFileLine: .tmp$, "  name$ = extractWord$(selected$(), "" "")"
+  appendFileLine: .tmp$, "  selectObject: table"
+  appendFileLine: .tmp$, "  Append row"
+  appendFileLine: .tmp$, "  Set string value:  i, ""type"", type$"
+  appendFileLine: .tmp$, "  Set string value:  i, ""name"", name$"
+  appendFileLine: .tmp$, "  Set numeric value: i, ""id"",   id[i]"
+  appendFileLine: .tmp$, "  Set numeric value: i, ""n"",    1"
+  appendFileLine: .tmp$, "endfor"
+
+  .return = nocheck runScript: .tmp$
+
+  # If the correct selection table is selected, restore its contents
+  if numberOfSelected("Table") and selected$("Table") == .rnd$
+    .table = selected()
+    .n = Get number of rows
+    for .i to .n
+      nocheck plusObject: object[.table, .i, "id"]
+    endfor
+    removeObject: .table
+  endif
+
+  .return = if .return == undefined then 0 else .return fi
+  .catch = !.return
+  deleteFile(.tmp$)
+endproc
