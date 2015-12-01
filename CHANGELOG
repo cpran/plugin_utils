@@ -1,3 +1,11 @@
+- next: # unreleased
+  - @try procedure now automatically replaces " \n" with newlines
+  - Added missing entry for previous version in this change log
+- v0.0.14:
+  - New procedures: mktempfile, strcount, strcount_regex, hasGUI
+  - Added a procedure for try/catch-style coding
+  - Expanded and simplified tests
+  - Tests are no longer numbered
 - v0.0.13:
   - Fixed requirement loop: utils no longer requires "selection"
 - v0.0.12:
