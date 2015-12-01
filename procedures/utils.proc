@@ -154,7 +154,7 @@ procedure strcount_regex (.str$, .ptn$)
   endif
 endproc
 
-# Create a temporary directory that is guaranteed not to exist
+# Create a temporary directory that is guaranteed not to previously exist
 #
 procedure mktemp (.template$)
   if .template$ = ""
@@ -182,14 +182,14 @@ procedure mktemp (.template$)
   .return$ = .name$
 endproc
 
-# Create a temporary directory that is guaranteed not to exist
+# Create a temporary directory that is guaranteed not to previously exist
 #
 procedure mktempfile (.template$, .extension$)
-  if .template$ = ""
-    .template$ = "tmp.XXXXXXXXXX"
-  endif
   if left$(.extension$) == "."
     .extension$ = right$(.extension$, length(.extension$) - 1)
+  endif
+  if .template$ = ""
+    .template$ = "tmp.XXXXXXXXXX"
   endif
 
   .number = index_regex(.template$, "X{3}$")

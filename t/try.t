@@ -11,10 +11,10 @@ call try
 @ok: variableExists("try.catch") and variableExists("try.return"),
   ... "Return variables exist on success"
 
-@ok: try.catch != undefined and try.return != undefined,
+@ok:  try.catch != undefined and try.return != undefined,
   ... "Return variables defined on success"
 
-@ok: try.return,
+@ok:  try.return,
   ... "Return is true on success"
 
 @ok: !try.catch,
@@ -31,13 +31,13 @@ call try
 @ok: variableExists("try.catch") and variableExists("try.return"),
   ... "Return variables exist on error"
 
-@ok: try.catch != undefined and try.return != undefined,
+@ok:  try.catch != undefined and try.return != undefined,
   ... "Return variables defined on error"
 
 @ok: !try.return,
   ... "Return is false on error"
 
-@ok: try.catch,
+@ok:  try.catch,
   ... "Catch is true on error"
 
 @ok: !fileReadable(try.tmp$),
@@ -56,10 +56,10 @@ call try
 @ok: variableExists("try.catch") and variableExists("try.return"),
   ... "Return variables exist on multiline success"
 
-@ok: try.catch != undefined and try.return != undefined,
+@ok:  try.catch != undefined and try.return != undefined,
   ... "Return variables defined on multiline success"
 
-@ok: try.return,
+@ok:  try.return,
   ... "Return is true on multiline success"
 
 @ok: !try.catch,
@@ -83,13 +83,13 @@ call try
 @ok: variableExists("try.catch") and variableExists("try.return"),
   ... "Return variables exist on multiline error"
 
-@ok: try.catch != undefined and try.return != undefined,
+@ok:  try.catch != undefined and try.return != undefined,
   ... "Return variables defined on multiline error"
 
 @ok: !try.return,
   ... "Return is false on multiline error"
 
-@ok: try.catch,
+@ok:  try.catch,
   ... "Catch is true on multiline error"
 
 @ok: !fileReadable(try.tmp$),
