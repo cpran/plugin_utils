@@ -26,6 +26,15 @@ include ../../plugin_utils/procedures/utils.proc
 procedure try .src$
   .return = 0
 
+  # For convenience, replace instances of \n with a newline
+  .src$ = replace$(.src$, " \n", newline$, 0)
+
+  # Save the current selection so it can be restored in case of error
+  .n = numberOfSelected()
+  for .i to .n
+    .id[.i] = selected(.i)
+  endfor
+
   # Code is isolated into a separate file
   @mktempfile: "try_praat_XXXXXX", ".praat"
   .tmp$ = mktempfile.name$
@@ -34,7 +43,7 @@ procedure try .src$
   # runScript assignes the ID of the only selected object on success
   # but for this, one and only one object must be selected.
   # A selection table is used to reduce this selection to a single object.
-  writeFileLine: .tmp$, .src$
+  writeFileLine:  .tmp$, .src$
   appendFileLine: .tmp$, ""
   appendFileLine: .tmp$, "n = numberOfSelected()"
   appendFileLine: .tmp$, "for i to n"
@@ -68,5 +77,14 @@ procedure try .src$
 
   .return = if .return == undefined then 0 else .return fi
   .catch = !.return
+
+  # If an error was found in the tried code, restore the original selection
+  if .catch
+    nocheck selectObject: undefined
+    for .i to .n
+      plusObject: .id[.i]
+    endfor
+  endif
+
   deleteFile(.tmp$)
 endproc

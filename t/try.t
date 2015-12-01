@@ -1,7 +1,7 @@
 include ../../plugin_testsimple/procedures/test_simple.proc
 include ../../plugin_utils/procedures/try.proc
 
-@no_plan()
+@plan(23)
 
 # This will succeed
 tg = Create TextGrid: 0, 1, "test", ""
@@ -103,5 +103,18 @@ call try
 
 @ok: numberOfSelected() == 2,
   ... "Multiple object selection maintained from tried code"
+
+Remove
+
+# This will succeed
+call try
+  ... synth = Create SpeechSynthesizer: "English", "default" \n
+  ... To Sound: "This is some text", "yes"                   \n
+  ... removeObject: synth                                    \n
+
+@ok: numberOfSelected() == 2,
+  ... "Automatic newline conversion"
+
+Remove
 
 @done_testing()
