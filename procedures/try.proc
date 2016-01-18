@@ -40,8 +40,8 @@ procedure try .src$
   .tmp$ = mktempfile.name$
   .rnd$ = mktempfile.random$
 
-  # runScript assignes the ID of the only selected object on success
-  # but for this, one and only one object must be selected.
+  # runScript assigns the ID of the only selected object on success.
+  # But for this, one and only one object must be selected.
   # A selection table is used to reduce this selection to a single object.
   writeFileLine:  .tmp$, .src$
   appendFileLine: .tmp$, ""
