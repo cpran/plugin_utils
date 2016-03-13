@@ -1,4 +1,6 @@
 - next: # unreleased
+- v0.0.15
+  - Preferences directory is normalised before generating paths
   - @try procedure now automatically replaces " \n" with newlines
   - Added missing entry for previous version in this change log
 - v0.0.14:
