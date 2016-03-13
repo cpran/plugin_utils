@@ -164,6 +164,7 @@ procedure mktemp (.template$)
   .number = index_regex(.template$, "X{3}$")
   .name$ = "--undefined--"
   if .number
+    @normalPrefDir()
     .number = index_regex(.template$, "X+$")
     .attempts = 0
     .base$ = left$(.template$, .number - 1)
@@ -172,12 +173,13 @@ procedure mktemp (.template$)
     repeat
       .attempts += 1
       @pwgen(.random_length)
-      .name$ = preferencesDirectory$ + "/" + .base$ + pwgen.return$
+      .name$ = preferencesDirectory$ + .base$ + pwgen.return$
     until .attempts > 100 or !fileReadable(.name$)
 
     .name$ = if right$(.name$) != "/" then .name$ + "/" else .name$ fi
     .name$ = replace_regex$(.name$, "^~", homeDirectory$, 0)
     createDirectory: .name$
+    @restorePrefDir()
   endif
   .return$ = .name$
 endproc
@@ -195,6 +197,7 @@ procedure mktempfile (.template$, .extension$)
   .number = index_regex(.template$, "X{3}$")
   .name$ = "--undefined--"
   if .number
+    @normalPrefDir()
     .number = index_regex(.template$, "X+$")
     .attempts = 0
     .base$ = left$(.template$, .number - 1)
@@ -203,7 +206,7 @@ procedure mktempfile (.template$, .extension$)
     repeat
       .attempts += 1
       @pwgen(.random_length)
-      .name$ = preferencesDirectory$ + "/" + .base$ + pwgen.return$
+      .name$ = preferencesDirectory$ + .base$ + pwgen.return$
       if .extension$ != ""
         .name$ = .name$ + "." + .extension$
       endif
@@ -212,6 +215,7 @@ procedure mktempfile (.template$, .extension$)
     .random$ = pwgen.return$
     .name$ = replace_regex$(.name$, "^~", homeDirectory$, 0)
     writeFile: .name$, ""
+    @restorePrefDir()
   endif
   .return$ = .name$
 endproc
