@@ -292,3 +292,24 @@ procedure restorePrefDir ()
     preferencesDirectory$ = normalPrefDir.old$
   endif
 endproc
+
+# Normalise a string into a Praat name
+#
+procedure praatifyString: .string$
+  .total = numberOfSelected()
+  for .i to .total
+    .original[.i] = selected(.i)
+  endfor
+
+  if .string$ != ""
+    Create TextGrid: 0, 1, .string$, ""
+    .return$ = selected$("TextGrid")
+  else
+    .return$ = .string$
+  endif
+
+  nocheck Remove
+  for .i to .total
+    plusObject: .original[.i]
+  endfor
+endproc
