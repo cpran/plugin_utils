@@ -35,7 +35,7 @@ procedure try: .length, .search$, .replace$
     plusObject: textgrid[i]
   endfor
 
-  runScript: preferencesDirectory$ + "/plugin_utils/scripts/rename_regex.praat",
+  runScript: "../scripts/rename_regex.praat",
     ... .search$, .replace$
 
   @ok_formula: "numberOfSelected() == " + string$(.length), "renamed " +
