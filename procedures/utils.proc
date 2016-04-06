@@ -350,13 +350,21 @@ endproc
 # Make sure that the .length is large enough to hold the padded string!
 #
 procedure zeropad (.n, .length)
-  .n$ = string$(abs(.n))
-  .sign$ = if .n < 0 then "-" else "" fi
-  .pad$ = ""
-  for .i to .length
-    .pad$ = .pad$ + "0"
-  endfor
-  .return$ = .sign$ + right$(.pad$ + .n$, .length)
+  if .n != undefined
+    .n$ = string$(abs(.n))
+    .nlength = length(.n$)
+
+    .length = if .length < .nlength then .nlength else .length fi
+
+    .sign$ = if .n < 0 then "-" else "" fi
+    .pad$ = ""
+    for .i to .length
+      .pad$ = .pad$ + "0"
+    endfor
+    .return$ = .sign$ + right$(.pad$ + .n$, .length)
+  else
+    .return$ = string$(undefined)
+  endif
 endproc
 
 # Convert a string to lower-case
