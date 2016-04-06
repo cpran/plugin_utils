@@ -34,24 +34,47 @@ endproc
 # specified character sets.
 #
 procedure rndstr (.length, .charset$)
-  .charset$ = if .charset$ = "" then "a1" else .charset$ fi
-  .char$ = ""
-  if index(.charset$, "a")
-    .char$ = .char$ + "abcdefghijkmlnopqrstuvwxyz"
-  endif
-  if index(.charset$, "A")
-    .char$ = .char$ + "ABCDEFGHIJKMLNOPQRSTUVWXYZ"
-  endif
-  if index(.charset$, "1")
-    .char$ = .char$ + "0123456789"
-  endif
-  if index(.charset$, "%")
-    .char$ = .char$ + "!?@#$%&+_"
-  endif
+  .charset$ = if .charset$ == "" then "a1" else .charset$ fi
+  @split: ":", .charset$
+  .sets$ = split.return$[1]
+  .custom$ = if split.length > 1 then split.return$[2] else "" fi
+
+  .consonants$ = "bcdfghjklmnpqrstvwxyz"
+  .vowels$     = "aeiou"
+  .digits$     = "0123456789"
+  .symbols$    = "!?@#$%&+_"
+
+  .sets = length(.sets$)
+  .chars$ = .custom$
+  for .i to .sets
+    .c$ = mid$(.sets$, .i, 1)
+    if    .c$ == "c"
+      .chars$ = .chars$ + .consonants$
+    elsif .c$ == "v"
+      .chars$ = .chars$ + .vowels$
+    elsif .c$ == "a"
+      .chars$ = .chars$ + .vowels$ + .consonants$
+    elsif .c$ == "C"
+      @toUpper: .consonants$
+      .chars$ = .chars$ + toUpper.return$
+    elsif .c$ == "V"
+      @toUpper: .vowels$
+      .chars$ = .chars$ + toUpper.return$
+    elsif .c$ == "A"
+      @toUpper: .vowels$
+      .chars$ = .chars$ + toUpper.return$
+      @toUpper: .vowels$
+      .chars$ = .chars$ + toUpper.return$
+    elsif .c$ == "1"
+      .chars$ = .chars$ + .digits$
+    elsif .c$ == "%"
+      .chars$ = .chars$ + .symbols$
+    endif
+  endfor
 
   .return$ = ""
   for .i to .length
-    .return$ = .return$ + mid$(.char$, randomInteger(1, length(.char$)), 1)
+    .return$ = .return$ + mid$(.chars$, randomInteger(1, length(.chars$)), 1)
   endfor
 endproc
 
