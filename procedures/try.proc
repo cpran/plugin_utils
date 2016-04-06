@@ -75,7 +75,7 @@ procedure try .src$
     for .i to .n
       nocheck plusObject: object[.table, .i, "id"]
     endfor
-    removeObject: .table
+    nocheck removeObject: .table
   endif
 
   .return = if .return == undefined then 0 else .return fi
@@ -85,7 +85,7 @@ procedure try .src$
   if .catch
     nocheck selectObject: undefined
     for .i to .n
-      plusObject: .id[.i]
+      nocheck plusObject: .id[.i]
     endfor
   endif
 
