@@ -130,28 +130,37 @@ procedure rndstr (.length, .charset$)
   endfor
 endproc
 
-# Split .str$ on .sep$ and store each found element in .array$ and
-# length of .array$ in .length
-#
-# Usage:
-#  include /path/to/this/script.praat
-#  [code]
-#  @split (SEPARATOR, STRING)
-#  for i to split.length
-#    str$[i] = split.return$[i]
-#  endfor
-#
-# where SEPARATOR is a separator string and STRING is a string to
-# separate.
-#
-# If string$ = "hello world", then after
-# @split (" ", string$)
-# split.return$[1] contains "hello" and split.return$[2] contains "world"
-#
-# Since .length stores the number of items separated by a string, it is always
-# larger than the amount of occurences of that string by one, which means
-# it can be used to count occurences as well.
-#
+#!
+#! ~~~ params
+#! in:
+#!   .separator$: The literal separator string
+#!   .string$: The string to split
+#! out:
+#!   .return$[]: The split string fragments
+#!   .length: The number of string fragments
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @split: " ", "correct horse battery staple"
+#! assert split.length == 4
+#! for i to split.length
+#!   appendInfoLine: split.return$[i]
+#! endfor
+#! # Prints
+#! #   correct
+#! #   horse
+#! #   battery
+#! #   staple
+#! ~~~
+#!
+#! Takes the contents of `string$` and separates it into a number of smaller
+#! strings using the string in `separator$` as the separator string. The
+#! separator can be longer than one character. The match is made using it
+#! as a string literal.
+#!
+#! The split substrings are stored in the `.return$[]` indexed variable,
+#! which will have a length equal to the value in `.length`.
+#!
 procedure split (.sep$, .str$)
   .seplen = length(.sep$)
   .length = 0
