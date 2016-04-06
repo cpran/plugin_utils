@@ -1,4 +1,20 @@
 - next: # unreleased
+- v0.0.16
+  - New:
+    - Added procedures: 
+      - praatifyStrings
+      - normaliseDirectory
+      - normalDefaultDir
+      - restoreDefaultDir
+    - Began documentation in-code, in preparation for cprandoc
+  - Changes:
+    - mktemp and mktempfile are based on the default directory
+    - zeropad does not lose significant digits with small lengths
+    - zeropad returns undefined with undefined inputs
+    - New character classes and support for custom classes in rndstr
+    - pwgen finally makes readable strings
+    - Tests do not depend on preferences directory
+    - CI scripts test Praat 5.4 to 6.0.15
 - v0.0.15
   - Preferences directory is normalised before generating paths
   - @try procedure now automatically replaces " \n" with newlines
