@@ -27,7 +27,7 @@ procedure try .src$
   .return = 0
 
   # For convenience, replace instances of \n with a newline
-  .src$ = replace$(.src$, " \n", newline$, 0)
+  .src$ = replace_regex$(.src$, "\s+\\n\s?", newline$, 0)
 
   # Save the current selection so it can be restored in case of error
   .n = numberOfSelected()
@@ -62,6 +62,9 @@ procedure try .src$
   appendFileLine: .tmp$, "  Set numeric value: i, ""id"",   id[i]"
   appendFileLine: .tmp$, "  Set numeric value: i, ""n"",    1"
   appendFileLine: .tmp$, "endfor"
+
+#   .script$ = readFile$(.tmp$)
+#   appendInfoLine: .script$
 
   .return = nocheck runScript: .tmp$
 
