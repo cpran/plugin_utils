@@ -1,7 +1,13 @@
 - next: # unreleased
+- v0.0.17
+  - New:
+    - Better handling of whitespace in try makes it easier to use
+  - Fixed:
+    - Removing original objects in a script with try no longer crashes
+      the script
 - v0.0.16
   - New:
-    - Added procedures: 
+    - Added procedures:
       - praatifyStrings
       - normaliseDirectory
       - normalDefaultDir
