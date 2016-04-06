@@ -19,15 +19,29 @@
 #
 # Copyright 2014, 2015 Jose Joaquin Atria
 
-# Extremely limited version of pwgen(1). Currently, unlike the traditional
-# command, this procedure does not strive for legibility, and acts simply as an
-# alias for rndstr().
-#
-# In the future this will hopefully change.
-#
+#! ~~~ params
+#! in:
+#!   .length: The length of the desired string
+#! out:
+#!   .return$: The generated pseudo-random string
+#! ~~~
+#!
+#! A basic implementation of the pwgen(1) UNIX command, which generates
+#! "pronounceable" random strings. These are made in this case by
+#! alternating consonants and vowels (consonants come first).
+#!
 procedure pwgen (.length)
-  @rndstr(.length, "a1")
-  .return$ = rndstr.return$
+  .c = 0
+  .return$ = ""
+  for .i to .length
+    .c = 1 - .c
+    if .c
+      @rndstr: 1, "c"
+    else
+      @rndstr: 1, "v"
+    endif
+    .return$ = .return$ + rndstr.return$
+  endfor
 endproc
 
 #! ~~~ params
