@@ -346,9 +346,32 @@ procedure mktempfile (.template$, .extension$)
   .return$ = .name$
 endproc
 
-# Pad a number with zeroes to the left.
-# Make sure that the .length is large enough to hold the padded string!
-#
+#! ~~~ params
+#! in:
+#!   .number: The number to pad
+#!   .length: The length to pad to
+#! out:
+#!   .return$: The padded number as a string
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @split: ",", "1,45,1350"
+#! for i to split.length
+#!   @zeropad: number(split.return$[i]), 4
+#!   appendInfoLine: zeropad.return$
+#! endfor
+#! # Prints
+#! #   0001
+#! #   0045
+#! #   1350
+#! ~~~
+#!
+#! Pad the value in number with leading zeroes. The padded value will be
+#! stored as a string in `.return$`, and will be `.length` charaters long.
+#! No check is made to make sure that no significant digits are lost, so make
+#! sure that length is at least long enough to hold the significant digits
+#! in number.
+#!
 procedure zeropad (.n, .length)
   if .n != undefined
     .n$ = string$(abs(.n))
