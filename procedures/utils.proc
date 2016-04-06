@@ -30,9 +30,47 @@ procedure pwgen (.length)
   .return$ = rndstr.return$
 endproc
 
-# Returns a random string of the specified length, with characters from the
-# specified character sets.
-#
+#! ~~~ params
+#! in:
+#!   .length: The length of the desired string
+#!   .charset$: The set of characters to use
+#! out:
+#!   .return$: The generated pseudo-random string
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @rndstr: 10, "a: "            ; Lowercase alphabetic and a space
+#! assert length(rndstr.return$) == 10
+#! ~~~
+#!
+#! Generate a random string with `length` characters. The string in `charset$`
+#! specifies what characters should be used to generate this string.
+#!
+#! Characters to the left of the leftmost colon (`:`) will each be parsed as
+#! the shorthand for one of the eight predefined sets described below. If a
+#! character appears more than once, the corresponding character set will be
+#! included as many times as its shorthand appears. Characters without
+#! corresponding character sets will be ignored.
+#!
+#! --------------------- ---------- ------------------------
+#! Name                  Shorthand  Definition
+#! --------------------- ---------- ------------------------
+#! Lowercase vowels      `v`        `aeiou`
+#! Lowercase consonants  `c`        `bcdfghjkmlnpqrstvwxyz`
+#! Lowercase alphabetic  `a`        `v` + `c`
+#! Uppercase vowels      `V`        `AEIOU`
+#! Uppercase consonants  `C`        `BCDFGHJKMLNPQRSTVWXYZ`
+#! Uppercase alphabetic  `A`        `V` + `C`
+#! Numeric               `1`        `0123456789`
+#! Symbols               `%`        `!?@#$%&+_`
+#! --------------------- ---------- ------------------------
+#!
+#! Characters to the right of the colon (including any other colons) will be
+#! included _as is_ to the final character set, This not only allows for
+#! customisation of the set itself, but also to do fine-control of the
+#! frequency of specific characters: if a given character should appear more
+#! often, add it more times to the list.
+#!
 procedure rndstr (.length, .charset$)
   .charset$ = if .charset$ == "" then "a1" else .charset$ fi
   @split: ":", .charset$
