@@ -238,8 +238,37 @@ procedure strcount_regex (.str$, .ptn$)
   endif
 endproc
 
-# Create a temporary directory that is guaranteed not to previously exist
-#
+#! ~~~ params
+#! in:
+#!   .template$: The template string for name generation
+#! out:
+#!   .return$: The name of the created directory
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @mktemp: "somefolder_XXXXXX"
+#! assert fileReadable: mktemp.return$
+#! ~~~
+#!
+#! Similar to the UNIX `mktemp(1)` command, this procedure creates a
+#! directory with a name that is guaranteed to not exist at the time the
+#! procedure was called. This procedure is not thread-safe, but is useful
+#! for storing temporary files. The directory will not be automatically
+#! deleted. The directory will be created in the default directory.
+#!
+#! The name of the directory is generated based on the contents of
+#! `template$`, which needs to be of the form `baseXXXXX`, in which each
+#! `X` character will be replaced with a random one using a single character
+#! from the "a1" character set as defined in [@rndstr](#rndstr). The template
+#! must have at least three random placeholders at the end.
+#!
+#! If no valid template is provided, no action will be taken and the returned
+#! string will be `--undefined--`. If the template is the empty string,
+#! `"tmp.XXXXXXXXXX"` will be used as a default.
+#!
+#! The name of the directory is stored in `.return$`, and the directory is
+#! created automatically.
+#!
 procedure mktemp (.template$)
   if .template$ = ""
     .template$ = "tmp.XXXXXXXXXX"
@@ -268,8 +297,21 @@ procedure mktemp (.template$)
   .return$ = .name$
 endproc
 
-# Create a temporary directory that is guaranteed not to previously exist
-#
+#! ~~~ params
+#! in:
+#!   .template$: The template string for name generation
+#! out:
+#!   .return$: The name of the created file
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @mktemp: "somefile_XXXXXX"
+#! assert fileReadable: mktempfile.return$
+#! ~~~
+#!
+#! Similar to [@mktemp](#mktemp), but this procedure creates temporary files.
+#! The interface for both procedures is exactly the same.
+#!
 procedure mktempfile (.template$, .extension$)
   if left$(.extension$) == "."
     .extension$ = right$(.extension$, length(.extension$) - 1)
