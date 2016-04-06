@@ -248,7 +248,7 @@ procedure mktemp (.template$)
   .number = index_regex(.template$, "X{3}$")
   .name$ = "--undefined--"
   if .number
-    @normalPrefDir()
+    @normalDefaultDir()
     .number = index_regex(.template$, "X+$")
     .attempts = 0
     .base$ = left$(.template$, .number - 1)
@@ -257,13 +257,13 @@ procedure mktemp (.template$)
     repeat
       .attempts += 1
       @pwgen(.random_length)
-      .name$ = preferencesDirectory$ + .base$ + pwgen.return$
+      .name$ = defaultDirectory$ + .base$ + pwgen.return$
     until .attempts > 100 or !fileReadable(.name$)
 
     .name$ = if right$(.name$) != "/" then .name$ + "/" else .name$ fi
     .name$ = replace_regex$(.name$, "^~", homeDirectory$, 0)
     createDirectory: .name$
-    @restorePrefDir()
+    @restoreDefaultDir()
   endif
   .return$ = .name$
 endproc
@@ -281,7 +281,7 @@ procedure mktempfile (.template$, .extension$)
   .number = index_regex(.template$, "X{3}$")
   .name$ = "--undefined--"
   if .number
-    @normalPrefDir()
+    @normalDefaultDir()
     .number = index_regex(.template$, "X+$")
     .attempts = 0
     .base$ = left$(.template$, .number - 1)
@@ -290,7 +290,7 @@ procedure mktempfile (.template$, .extension$)
     repeat
       .attempts += 1
       @pwgen(.random_length)
-      .name$ = preferencesDirectory$ + .base$ + pwgen.return$
+      .name$ = defaultDirectory$ + .base$ + pwgen.return$
       if .extension$ != ""
         .name$ = .name$ + "." + .extension$
       endif
@@ -299,7 +299,7 @@ procedure mktempfile (.template$, .extension$)
     .random$ = pwgen.return$
     .name$ = replace_regex$(.name$, "^~", homeDirectory$, 0)
     writeFile: .name$, ""
-    @restorePrefDir()
+    @restoreDefaultDir()
   endif
   .return$ = .name$
 endproc
@@ -359,13 +359,20 @@ endproc
 # Normalise the preferences directory, so that it has a predictable
 # name across platforms.
 #
+procedure normaliseDirectory: .dir$
+  .return$ = replace_regex$(.dir$, "(con)?(\.(EXE|exe))?$", "", 0)
+  .return$ = replace_regex$(.return$, "^~", homeDirectory$, 0)
+  .return$ = replace_regex$(.return$, "\\", "/", 0)
+  .return$ = .return$ + if right$(.return$) != "/" then "/" else "" fi
+endproc
+
+# Normalise a directory, so that it has a predictable
+# name across platforms.
+#
 procedure normalPrefDir ()
   .old$ = preferencesDirectory$
-  preferencesDirectory$ = replace_regex$(preferencesDirectory$, "(con)?(\.(EXE|exe))?$", "", 0)
-  preferencesDirectory$ = replace_regex$(preferencesDirectory$, "^~", homeDirectory$, 0)
-  preferencesDirectory$ = replace_regex$(preferencesDirectory$, "\\", "/", 0)
-  preferencesDirectory$ = preferencesDirectory$ +
-    ... if right$(preferencesDirectory$) != "/" then "/" else "" fi
+  @normaliseDirectory: preferencesDirectory$
+  preferencesDirectory$ = normaliseDirectory.return$
 endproc
 
 # Restore the original preferences directory, before normalisation.
@@ -374,6 +381,24 @@ endproc
 procedure restorePrefDir ()
   if variableExists("normalPrefDir.old$")
     preferencesDirectory$ = normalPrefDir.old$
+  endif
+endproc
+
+# Normalise the default directory, so that it has a predictable
+# name across platforms.
+#
+procedure normalDefaultDir ()
+  .old$ = defaultDirectory$
+  @normaliseDirectory: defaultDirectory$
+  defaultDirectory$ = normaliseDirectory.return$
+endproc
+
+# Restore the original default directory, before normalisation.
+# See normalDefaultDir().
+#
+procedure restoreDefaultDir ()
+  if variableExists("normalDeaultDir.old$")
+    defaultDirectory$ = normalDefaultDir.old$
   endif
 endproc
 
