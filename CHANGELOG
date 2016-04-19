@@ -1,11 +1,25 @@
 - next: # unreleased
-- v0.0.17
+- v0.0.18:
+  - New:
+    - Add a trace procedure, with redirectable output and test sensitivity
+      (if it detects that it is in test mode, it prepends printing with
+      hash characters).
+    - Finished including in-code documentation for all procedures
+  - Fixed:
+    - rndstr can have custom character classes with colons in them
+  - Changes:
+    - time procedure now uses full names for months and days
+    - Praat version comparison procedure in require.proc generalised
+      and renamed. Previous version usable, but will raise a warning
+      about deprecation.
+    - Removed testsimple as a dependency
+- v0.0.17:
   - New:
     - Better handling of whitespace in try makes it easier to use
   - Fixed:
     - Removing original objects in a script with try no longer crashes
       the script
-- v0.0.16
+- v0.0.16:
   - New:
     - Added procedures:
       - praatifyStrings
@@ -21,7 +35,7 @@
     - pwgen finally makes readable strings
     - Tests do not depend on preferences directory
     - CI scripts test Praat 5.4 to 6.0.15
-- v0.0.15
+- v0.0.15:
   - Preferences directory is normalised before generating paths
   - @try procedure now automatically replaces " \n" with newlines
   - Added missing entry for previous version in this change log
