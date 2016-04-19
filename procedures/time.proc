@@ -57,20 +57,48 @@ procedure parseTime (.date$)
   if split.length != 5
     exitScript: "Unexpected output from date$()!"
   endif
-  .days$   = "Mon Tue Wed Thu Fri Sat Sun"
-  .months$ = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec"
+  for .i to split.length
+    .date$[.i] = split.return$[.i]
+  endfor
 
-  .dw$ = split.return$[1]        ; "Fri"
-  .dw = index(.days$, .dw$)
-  .dw = if .dw > 0 then ((.dw - 1) / 4) + 1 else .dw fi
+  .days$   = "Monday Tuesday Wednesday Thursday Friday Saturday Sunday"
+  @split(" ", .days$)
+  .days = split.length
+  for .i to .days
+    .days$[.i] = split.return$[.i]
+  endfor
 
-  .mo$ = split.return$[2]        ; "Jul"
-  .mo = index(.months$, .mo$)
-  .mo = if .mo > 0 then ((.mo - 1) / 4) + 1 else .mo fi
+  .months$ = "January February March April May June
+    ... July August September October November December"
+  @split(" ", .months$)
+  .months = split.length
+  for .i to .months
+    .months$[.i] = split.return$[.i]
+  endfor
 
-  .dm  = number(split.return$[3]); 18
-  .tm$ =        split.return$[4] ; "18:41:33"
-  .yr  = number(split.return$[5]); 2014
+  .dw$ = .date$[1]        ; "Fri"
+  .dw = 0
+  for .i to .days
+    if index_regex(.days$[.i], "^" + .dw$)
+      .dw = .i
+      .dw$ = .days$[.i]   ; "Friday"
+      .i += .days
+    endif
+  endfor
+
+  .mo$ = .date$[2]        ; "Jul"
+  .mo = 0
+  for .i to .months
+    if index_regex(.months$[.i], "^" + .mo$)
+      .mo = .i
+      .mo$ = .months$[.i] ; "July"
+      .i += .months
+    endif
+  endfor
+
+  .dm  = number(.date$[3]); 18
+  .tm$ =        .date$[4] ; "18:41:33"
+  .yr  = number(.date$[5]); 2014
 
   @split(":", .tm$)
   if split.length != 3
