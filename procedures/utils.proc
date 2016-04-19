@@ -85,9 +85,14 @@ endproc
 #!
 procedure rndstr (.length, .charset$)
   .charset$ = if .charset$ == "" then "a1" else .charset$ fi
-  @split: ":", .charset$
-  .sets$ = split.return$[1]
-  .custom$ = if split.length > 1 then split.return$[2] else "" fi
+  .sep = index(.charset$, ":")
+  if .sep
+    .sets$ = left$(.charset$, .sep - 1)
+    .custom$ = right$(.charset$, length(.charset$) - .sep)
+  else
+    .sets$ = .charset$
+    .custom$ = ""
+  endif
 
   .consonants$ = "bcdfghjklmnpqrstvwxyz"
   .vowels$     = "aeiou"
