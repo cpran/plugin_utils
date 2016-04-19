@@ -1,0 +1,80 @@
+# This script is part of the utils CPrAN plugin for Praat.
+# The latest version is available through CPrAN or at
+# <http://cpran.net/plugins/utils>
+#
+# The utils plugin is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public
+# License as published by the Free Software Foundation, either
+# version 3 of the License, or (at your option) any later version.
+#
+# The utils plugin is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with utils. If not, see <http://www.gnu.org/licenses/>.
+#
+# Copyright 2016 Jose Joaquin Atria
+
+#! ~~~ params
+#! in:
+#!   .msg$: A string to print to trace device
+#!   trace.enable: >
+#!     Trace flag. When set to false, this procedure does nothing
+#!   trace.output$: >
+#!     The filename of an external trace file. If empty, print trace to STDOUT.
+#!   trace.cleared: >
+#!     If false, the device (file or Info window) will be cleared before
+#!     printing the next message. Otherwise, messages will be appended. By
+#!     default, it is set to true when priting to a file, and false otherwise.
+#! ~~~
+#!
+#! Print a trace message, either to STDOUT or to a file, if a trace option
+#! has been set (by setting `trace` to `1`). If the flag has been set to
+#! true, the value of `trace$` is used as the filename of a file to write
+#! to. If that variable is the empty string, the message is printed to
+#! the Info window.
+#!
+#! Whether messages are appended to the device or printed to an empty device
+#! can be controlled by setting the value of the `.cleared` variable. When this
+#! variable is true, the device will be considered to have been cleared already,
+#! and messages will be appended.
+#!
+procedure trace: .msg$
+  if !variableExists("trace.enable")
+    .enable = 0
+  endif
+
+  if .enable
+    if variableExists("plan.current_plan")
+      # In testing mode, preppend a hash to avoid interrupting TAP stream
+      .pre$ = "# "
+    else
+      .pre$ = ""
+    endif
+
+    if !variableExists("trace.output$")
+      .output$ = ""
+    endif
+
+    if !variableExists("trace.cleared")
+      # If tracing to a filename, do not clear by default
+      .cleared = if length(.output$) then 1 else 0 fi
+    endif
+
+    if .output$ != ""
+      if !.cleared
+        .cleared = 1
+        writeFileLine: .output$, ""
+      endif
+      appendFileLine: .output$, .pre$, .msg$
+    else
+      if !.cleared
+        .cleared = 1
+        clearinfo
+      endif
+      appendInfoLine: .pre$, .msg$
+    endif
+  endif
+endproc
