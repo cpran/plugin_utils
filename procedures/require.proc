@@ -21,22 +21,75 @@ include ../../plugin_utils/procedures/utils.proc
 
 call require 5.3.46
 
-procedure require (.version$)
-  @comparePraatVersionStrings(praatVersion$, .version$)
-  if comparePraatVersionStrings.newer > 0
-    exitScript("This script requires Praat v.", .version$, ". ",
-      ..."Please update Praat", newline$)
+#! ~~~ params
+#! in:
+#!   .version$: A version string to require.
+#! seealso:
+#!   - utils@compareSemVer
+#! ~~~
+#!
+#! Makes sure the current version is at least a certain version. If the current
+#! Praat version is lower than the one specified, the procedure will halt the
+#! calling script with a useful error message.
+#!
+#! Praat version strings are interpreted as semantic version strings, and
+#! compared with the `@compareSemVer` procedure.
+#!
+procedure require .version$
+  call compareSemVer "'praatVersion$'" '.version$'
+  if compareSemVer.newer > 0
+    exit This script requires Praat v'.version$'.
+      ... Please update Praat'newline$'
   endif
 endproc
 
 procedure comparePraatVersionStrings (.a$, .b$)
+#! ~~~ params
+#! in:
+#!   .a$: A version string to compare
+#!   .b$: Another version string to compare
+#! deprecated: utils@compareSemVer
+#! ~~~
+#!
+#! Compares two version strings to see which one is newer. Version strings are
+#! expected to be in the same format as those used by Praat and, more generally,
+#! recommended by the semantic versioning proposal. These have three numeric
+#! components separated by periods. Version components are compared from left
+#! to right, and later components are only checked when earlier components are
+#! equal.
+#!
+#! This procedure is deprecated. Use instead `@compareSemVer`.
+#!
+procedure comparePraatVersionStrings .a$ .b$
+  appendInfoLine: "W: comparePraatVersionStrings is deprecated. ",
+    ... "Use ""compareSemVer"" instead.", newline$
+  call compareSemVer ".a$" '.b$'
+  .newer = compareSemVer.newer
+endproc
+
+#! ~~~ params
+#! in:
+#!   .a$: A version string to compare
+#!   .b$: Another version string to compare
+#! ~~~
+#!
+#! Compares two version strings to see which one is newer. Version strings are
+#! expected to be in the same format as those used by Praat and, more generally,
+#! recommended by the semantic versioning proposal. These have three numeric
+#! components separated by periods. Version components are compared from left
+#! to right, and later components are only checked when earlier components are
+#! equal.
+#!
+procedure compareSemVer .a$ .b$
   if .a$ != .b$
     @split(".", .a$)
+    call split "." '.a$'
     for .i to 3
       .a[.i] = if .i <= split.length then number(split.array$[.i]) else 0 fi
     endfor
 
     @split(".", .b$)
+    call split "." '.b$'
     for .i to 3
       .b[.i] = if .i <= split.length then number(split.array$[.i]) else 0 fi
     endfor
