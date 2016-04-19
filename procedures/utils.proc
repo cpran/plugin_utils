@@ -1,5 +1,3 @@
-# Praat utils
-#
 # This script is part of the utils CPrAN plugin for Praat.
 # The latest version is available through CPrAN or at
 # <http://cpran.net/plugins/utils>
@@ -17,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with utils. If not, see <http://www.gnu.org/licenses/>.
 #
-# Copyright 2014, 2015 Jose Joaquin Atria
+# Copyright 2014-2016 Jose Joaquin Atria
 
 #! ~~~ params
 #! in:
@@ -130,7 +128,6 @@ procedure rndstr (.length, .charset$)
   endfor
 endproc
 
-#!
 #! ~~~ params
 #! in:
 #!   .separator$: The literal separator string
@@ -390,22 +387,66 @@ procedure zeropad (.n, .length)
   endif
 endproc
 
-# Convert a string to lower-case
-#
+#! ~~~ params
+#! in:
+#!   .string$: The string to convert
+#! out:
+#!   .return$: The converted string string
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @toLower: "WORLD"
+#! assert toLower.return$ == "world"
+#! ~~~
+#!
+#! Convert a string to lowercase. The converted string is stored in `.return$`.
+#!
 procedure toLower (.string$)
   .return$ = replace_regex$(.string$, "(.*)", "\L\1", 0)
 endproc
 
-# Convert a string to upper-case
-#
+#! ~~~ params
+#! in:
+#!   .string$: The string to convert
+#! out:
+#!   .return$: The converted string string
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @toUpper: "hello"
+#! assert toUpper.return$ == "HELLO"
+#! ~~~
+#!
+#! Convert a string to uppercase. The converted string is stored in `.return$`.
+#!
 procedure toUpper (.string$)
   .return$ = replace_regex$(.string$, "(.*)", "\U\1", 0)
 endproc
 
-# Check if the running version of Praat has access to GUI commands
-# .return will be assigned to 1 if there are GUI commands, or 0
-# otherwise.
-#
+#! ~~~ params
+#! out:
+#!   .return: True if in an interactive (i.e. graphical) session
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @hasGUI()
+#! if hasGUI.return
+#!   appendInfoLine: "Has a GUI"
+#! else
+#!   appendInfoLine: "Does not have a GUI"
+#! endif
+#! ~~~
+#!
+#! Detects whether Praat is running with a graphical user interface (GUI) or
+#! not. Praat normally has a GUI, and those cases are normally interactive
+#! sessions, meaning that there is a user who is able to make decisions. But
+#! Praat can also run in "batch" mode, without a GUI, and also in
+#! "non-interactive" mode.
+#!
+#! This procedure can detect which of this is the case. The value stored in
+#! `.return` will be true ( `!= 0`) if there is a GUI, or false (`== 0`)
+#! otherwise.
+#!
 procedure hasGUI ()
   .total = numberOfSelected()
   for .i to .total
@@ -429,54 +470,151 @@ procedure hasGUI ()
   endfor
 endproc
 
-# Normalise the preferences directory, so that it has a predictable
-# name across platforms.
-#
-procedure normaliseDirectory: .dir$
-  .return$ = replace_regex$(.dir$, "(con)?(\.(EXE|exe))?$", "", 0)
+#! ~~~ params
+#! in:
+#!   .dir$: The path to a directory to normalise
+#! out:
+#!   .return$: The normalised path
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @normaliseDirectory: "~/some\dir"
+#! assert normaliseDirectory.return$ == "/home/user/some/dir/"
+#! ~~~
+#!
+#! Performs some string conversions to have more predictable paths across
+#! platforms. The changes include changing backslases (`\`), used in Windows
+#! as path separators, for forward slashes (`/`), which are treated by Praat as
+#! platform-independent; and replacing an initial tilde (`~`) for the user's
+#! home directory.
+#!
+#! Directory paths normalised using this procedure are guaranteed to have a
+#! single trailing slash.
+#!
+procedure normaliseDirectory: .return$
   .return$ = replace_regex$(.return$, "^~", homeDirectory$, 0)
   .return$ = replace_regex$(.return$, "\\", "/", 0)
   .return$ = .return$ + if right$(.return$) != "/" then "/" else "" fi
 endproc
 
-# Normalise a directory, so that it has a predictable
-# name across platforms.
-#
+#! ~~~ params
+#! out:
+#!   preferencesDirectory$: Is normalised using `@normaliseDirectory`
+#! seealso:
+#!   - utils@normaliseDirectory
+#!   - utils@restorePrefDir
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @normalPrefDir()
+#! assert right$(preferencesDirectory$) == "/"
+#! ~~~
+#!
+#! Normalise the preferences directory, so that it has a predictable name
+#! across platforms. Use this procedure with care, because since 5.4.22 the
+#! user can specify the preferences directory at startup!
+#!
+#! The normalisation used in this procedure can be undone with
+#! `@restorePrefDir`.
+#!
 procedure normalPrefDir ()
   .old$ = preferencesDirectory$
   @normaliseDirectory: preferencesDirectory$
   preferencesDirectory$ = normaliseDirectory.return$
 endproc
 
-# Restore the original preferences directory, before normalisation.
-# See normalPrefDir().
-#
+#! ~~~ params
+#! out:
+#!   preferencesDirectory$: Is restored to its original value
+#! seealso:
+#!   - utils@restorePrefDir
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! original$ = preferencesDirectory$
+#! @normalPrefDir()
+#! assert right$(preferencesDirectory$) == "/"
+#! @restorePrefDir()
+#! assert original$ == preferencesDirectory$
+#! ~~~
+#!
+#! Restore the original preferences directory, as it was before normalisation
+#! with `@normalPrefDir`. Calling this procedure before normalisation has no
+#! effect. It is also idempotent, so calling it multiple time has no ill
+#! effects.
+#!
 procedure restorePrefDir ()
   if variableExists("normalPrefDir.old$")
     preferencesDirectory$ = normalPrefDir.old$
   endif
 endproc
 
-# Normalise the default directory, so that it has a predictable
-# name across platforms.
-#
+#! ~~~ params
+#! out:
+#!   defaultDirectory$: Is normalised using `@normaliseDirectory`
+#! seealso:
+#!   - utils@normaliseDirectory
+#!   - utils@restoreDefaultDir
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @normalDefaultDir()
+#! assert right$(defaultDirectory$) == "/"
+#! ~~~
+#!
+#! Normalise the default directory, so that it has a predictable name
+#! across platforms.
+#!
+#! The normalisation used in this procedure can be undone with
+#! `@restoreDefaultDir`.
+#!
 procedure normalDefaultDir ()
   .old$ = defaultDirectory$
   @normaliseDirectory: defaultDirectory$
   defaultDirectory$ = normaliseDirectory.return$
 endproc
 
-# Restore the original default directory, before normalisation.
-# See normalDefaultDir().
-#
+#! ~~~ params
+#! out:
+#!   defaultDirectory$: Is restored to its original value
+#! seealso:
+#!   - utils@normalDefaultDir
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! original$ = defaultDirectory$
+#! @normalDefaultDir()
+#! assert right$(defaultDirectory$) == "/"
+#! @restoreDefaultDir()
+#! assert original$ == defaultDirectory$
+#! ~~~
+#!
+#! Restore the original default directory, as it was before normalisation
+#! with `@normalDefaultDir`. Calling this procedure before normalisation has no
+#! effect. It is also idempotent, so calling it multiple time has no ill
+#! effects.
+#!
 procedure restoreDefaultDir ()
   if variableExists("normalDeaultDir.old$")
     defaultDirectory$ = normalDefaultDir.old$
   endif
 endproc
 
-# Normalise a string into a Praat name
-#
+#! ~~~ params
+#! in:
+#!   ,string$: The string to convert
+#! out:
+#!   .return$: The converted string
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @praatifyString: "Hello, World!"
+#! assert praatifyString.return$ == "Hello__World_"
+#! ~~~
+#!
+#! Perform the transformations done internally by Praat to convert a string
+#! into a valid object or filename.
+#!
 procedure praatifyString: .string$
   .total = numberOfSelected()
   for .i to .total

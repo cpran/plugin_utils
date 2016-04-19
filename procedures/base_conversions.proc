@@ -1,5 +1,3 @@
-# Procedures to convert to and from base-n numbers
-#
 # This script is part of the utils CPrAN plugin for Praat.
 # The latest version is available through CPrAN or at
 # <http://cpran.net/plugins/utils>
@@ -17,11 +15,24 @@
 # You should have received a copy of the GNU General Public License
 # along with utils. If not, see <http://www.gnu.org/licenses/>.
 #
-# Copyright 2014, 2015 Jose Joaquin Atria
+# Copyright 2014-2016 Jose Joaquin Atria
 
-# Parse a string as a hexadecimal number
-# The result is stored in .n
-#
+#! ~~~ params
+#! in:
+#!   .str$: A hexadecimal string representation of a number
+#! out:
+#!   .n: The decimal representation of that number
+#! seealso:
+#!   - utils@n2dec
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @hex2dec: "10"
+#! assert hex2dec.n == 16
+#! ~~~
+#!
+#! Parse a string as a hexadecimal number. The result is stored in `.n`.
+#!
 procedure hex2dec: .str$
   # Normalize hexadecimal string: no leading hash, lowercase.
   .hex$ = replace$ (.str$, "#", "", 0)
@@ -30,49 +41,131 @@ procedure hex2dec: .str$
   .n = n2dec.n
 endproc
 
-# Parse a string as an octal number
-# The result is stored in .n
-#
+#! ~~~ params
+#! in:
+#!   .str$: An octal string representation of a number
+#! out:
+#!   .n: The decimal representation of that number
+#! seealso:
+#!   - utils@n2dec
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @oct2dec: "10"
+#! assert oct2dec.n == 8
+#! ~~~
+#!
+#! Parse a string as an octal number. The result is stored in `.n`.
+#!
 procedure oct2dec: .str$
   @n2dec(.str$, 8)
   .n = n2dec.n
 endproc
 
-# Parse a string as a binary number
-# The result is stored in .n
-#
+#! ~~~ params
+#! in:
+#!   .str$: A binary string representation of a number
+#! out:
+#!   .n: The decimal representation of that number
+#! seealso:
+#!   - utils@n2dec
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @bin2dec: "10"
+#! assert bin2dec.n == 2
+#! ~~~
+#!
+#! Parse a string as a binary number. The result is stored in `.n`.
+#!
 procedure bin2dec: .str$
   @n2dec(.str$, 2)
   .n = n2dec.n
 endproc
 
-# Parse an integer and return an hexadecimal string representation of it
-# The result is stored in .n$
-#
-procedure dec2hex: .int
-  @dec2n(.int, 16)
+#! ~~~ params
+#! in:
+#!   .num: A number to convert to hexadecimal notation
+#! out:
+#!   .n$: The hexadecimal representation of that number, as a string
+#! seealso:
+#!   - utils@dec2n
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @dec2hex: 16
+#! assert dec2hex.n$ == "10"
+#! ~~~
+#!
+#! Parse a number and return its hexadecimal string representation. The result
+#! is stored in `.n$`.
+#!
+procedure dec2hex: .num
+  @dec2n(.num, 16)
   .n$ = dec2n.n$
 endproc
 
-# Parse an integer and return an octal string representation of it
-# The result is stored in .n$
-#
+#! ~~~ params
+#! in:
+#!   .num: A number to convert to octal notation
+#! out:
+#!   .n$: The octal representation of that number, as a string
+#! seealso:
+#!   - utils@dec2n
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @dec2hex: 8
+#! assert dec2hex.n$ == "10"
+#! ~~~
+#!
+#! Parse a number and return its octal string representation. The result
+#! is stored in `.n$`.
+#!
 procedure dec2oct: .int
   @dec2n(.int, 8)
   .n$ = dec2n.n$
 endproc
 
-# Parse an integer and return a binary string representation of it
-# The result is stored in .n$
-#
+#! ~~~ params
+#! in:
+#!   .num: A number to convert to binary notation
+#! out:
+#!   .n$: The binary representation of that number, as a string
+#! seealso:
+#!   - utils@dec2n
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @dec2bin: 2
+#! assert dec2bin.n$ == "10"
+#! ~~~
+#!
+#! Parse a number and return its binary string representation. The result
+#! is stored in `.n$`.
+#!
 procedure dec2bin: .int
   @dec2n(.int, 2)
   .n$ = dec2n.n$
 endproc
 
-# Parse a string as an base-n number
-# The result is stored in .n
-#
+#! ~~~ params
+#! in:
+#!   .num$: A string to parse as a base-n number
+#!   .base: The base of the number represented in that string
+#! out:
+#!   .n: The decimal representation of that number
+#! seealso:
+#!   - utils@dec2n
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @m2dec: "10", 12
+#! assert n2dec.n == 12
+#! ~~~
+#!
+#! Parse a string as a base-n number. The result is stored in `.n`.
+#!
 procedure n2dec: .str$, .base
   .digits$ = left$("0123456789abcdefghijklmnopqrstuvwxyz", .base)
   .str$ = replace_regex$(.str$, "(.)", "\L\1", 0)
@@ -102,7 +195,7 @@ procedure n2dec: .str$, .base
 
     .frac = 0
     if .rational
-      #process rational part
+      # Process rational part
       .radix = .rational
       .len = length(.str$)
       .frac$ = right$(.str$, .len - .radix)
@@ -117,14 +210,29 @@ procedure n2dec: .str$, .base
   endif
 endproc
 
-# Parse an integer and return a string representation of it in base-n
-# The result is stored in .n$
-#
-procedure dec2n: .arg, .base
+#! ~~~ params
+#! in:
+#!   .num: A number to convert
+#!   .base: The base of the system to use for conversion
+#! out:
+#!   .n$: The decimal representation of that number
+#! seealso:
+#!   - utils@n2dec
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @dec2n: 12, 12
+#! assert dec2n.n$ == "10"
+#! ~~~
+#!
+#! Parse a number and return a string representation of it in base-n. The
+#! result is stored in `.n$`.
+#!
+procedure dec2n: .num, .base
   .digits$ = left$("0123456789abcdefghijklmnopqrstuvwxyz", .base)
   .n$ = ""
 
-  .n = abs(.arg)
+  .n = abs(.num)
   repeat
     .integer = .n div .base
     .remainder = .n mod .base
@@ -132,7 +240,7 @@ procedure dec2n: .arg, .base
     .n = .integer
   until !.integer
 
-  .rational = abs(.arg) mod 1
+  .rational = abs(.num) mod 1
   if .rational
     .n$ = .n$ + "."
     repeat
@@ -143,11 +251,28 @@ procedure dec2n: .arg, .base
     until !.rational
   endif
 
-  .n$ = if .arg < 0 then "-" + .n$ else .n$ fi
+  .n$ = if .num < 0 then "-" + .n$ else .n$ fi
 endproc
 
-# For backwards compatibility
+#! ~~~ params
+#! in:
+#!   .str$: A hexadecimal string representation of a number
+#! out:
+#!   .n: The decimal representation of that number
+#! deprecated: hex2dec
+#! seealso:
+#!   - utils@n2dec
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @parseHex: "10"
+#! assert parseHex.n == 16
+#! ~~~
+#!
+#! Deprecated. Use instead `@hex2dec`.
+#!
 procedure parseHex: .str$
+  appendInfoLine: "# W: ""parseHex"" is deprecated. Use instead ""hex2dec""."
   @n2dec(.str$, 16)
   .n = n2dec.n
 endproc

@@ -1,5 +1,3 @@
-# Provide file selector GUIs
-#
 # This script is part of the utils CPrAN plugin for Praat.
 # The latest version is available through CPrAN or at
 # <http://cpran.net/plugins/utils>
@@ -17,8 +15,28 @@
 # You should have received a copy of the GNU General Public License
 # along with utils. If not, see <http://www.gnu.org/licenses/>.
 #
-# Copyright 2014, 2015 Jose Joaquin Atria
+# Copyright 2014-2016 Jose Joaquin Atria
 
+#! ~~~ params
+#! in:
+#!   .name$: The variable to check for a filename
+#!   .label$: The label to use for the file selector, if needed
+#! out:
+#!   .name$: The filename after possible graphic selection
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! form Select file...
+#!   sentence Path
+#! endform
+#! @checkFilename: path$, "Choose a file to read..."
+#! path$ = checkFilename.name$
+#! ~~~
+#!
+#! Make sure that a variable holds a filename, or open a GUI file selector to
+#! select one. If the user cancels the action in the selector, the script exits
+#! quietly.
+#!
 procedure checkFilename (.name$, .label$)
   if .name$ = ""
     .name$ = chooseReadFile$(.label$)
@@ -28,6 +46,26 @@ procedure checkFilename (.name$, .label$)
   endif
 endproc
 
+#! ~~~ params
+#! in:
+#!   .name$: The variable to check for a filename
+#!   .label$: The label to use for the file selector, if needed
+#! out:
+#!   .name$: The filename after possible graphic selection
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! form Select file...
+#!   sentence Path
+#! endform
+#! @checkWriteFile: path$, "Choose a file to save..."
+#! path$ = checkWriteFile.name$
+#! ~~~
+#!
+#! Make sure that a variable holds a filename, or open a GUI output file
+#! selector to select one. If the user cancels the action in the selector, the
+#! script exits quietly.
+#!
 procedure checkWriteFile (.name$, .label$, .file$)
   if .name$ = ""
     .name$ = chooseWriteFile$(.label$, .file$)

@@ -19,10 +19,63 @@
 
 include ../../plugin_utils/procedures/utils.proc
 
-# Execute Praat code with an isolated interpreter
-# and provide a boolean value with the exit status of
-# that code.
-#
+#! ~~~ params
+#! in:
+#!   .src$: The source of a Praat script, as a string
+#! out:
+#!   .return: True if the executed script exited without errors
+#!   .catch: False if the executed script exited without errors
+#! selection:
+#!   out: Might change depending on contents of executed script
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! @try: "Play"
+#! # or
+#! call try
+#!   ... Copy: extractWord$(selected$(), " ") + "_copy" \n
+#!   ... Reverse                                        \n
+#!
+#! if try.catch
+#!   appendInfoLine: "An error was encountered, but we sailed past it"
+#! endif
+#! ~~~
+#!
+#! Error handling in Praat is limited, and is mostly restricted exclusively to
+#! the use of the `nowarn` and `nocheck` directives, which swallow all warnings
+#! and errors respectively. However, these can only be applied under certain
+#! circumstances, and can only apply to a specific line.
+#!
+#! The `@try` procedure takes a single string of code (which could be a single
+#! line or a block of code represented by a string containing separating
+#! newlines) and executes that in a safe manner, such that even if execution of
+#! those lines crashes due to some unexpected reason, the execution of the
+#! larger script will not.
+#!
+#! Any changes in the selection that result from the _successful_ completion of
+#! the code passed as the argument to `@try` will be kept. Otherwise, the
+#! selection active at the time `@try` was called will be restored.
+#!
+#! Control variables are also provided to make it easy to check whether any
+#! errors were encountered. The `.return` variable will be true if the code
+#! executed without errors, and false otherwise. For convenience, a separate
+#! variable `.catch` is provided with the opposite meaning: true on error,
+#! false on success.
+#!
+#! Despite the name of the variable, it is not possible at this point to
+#! actually _catch_ the error. All this procedure does it to make it possible
+#! to `nocheck` larger blocks of code.
+#!
+#! Since the code that is passed to `@try` is executed by a separate instance
+#! of the interpreter, the variables in that code will exist on an entirely
+#! separate scope from the rest of the script, and will not be available in the
+#! calling script. Likewise, the script that is "tried" will not have access
+#! to the variables in the calling script.
+#!
+#! It is not possible also to pass arguments to the tried code. To bypass this
+#! issue, save them in an object (a Strings or a Table object might be
+#! suitable) and read them from there.
+#!
 procedure try .src$
   .return = 0
 
@@ -63,8 +116,8 @@ procedure try .src$
   appendFileLine: .tmp$, "  Set numeric value: i, ""n"",    1"
   appendFileLine: .tmp$, "endfor"
 
-#   .script$ = readFile$(.tmp$)
-#   appendInfoLine: .script$
+  # .script$ = readFile$(.tmp$)
+  # appendInfoLine: .script$
 
   .return = nocheck runScript: .tmp$
 
