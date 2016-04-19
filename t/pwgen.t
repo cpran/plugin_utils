@@ -5,16 +5,16 @@ include ../procedures/utils.proc
 
 @pwgen(10)
 
-@ok( pwgen.return$ != "",        "pwgen: string not empty" )
-@ok( length(pwgen.return$) = 10, "pwgen: string has right length" )
+@ok: pwgen.return$ != "",        "string not empty"
+@ok: length(pwgen.return$) = 10, "string has right length"
 
 @split_letters()
-@ok( length(vowels$) == length(consonants$), "pwgen: vowel and consonat parity" )
+@ok: length(vowels$) == length(consonants$), "vowel and consonat parity"
 
 @pwgen(9)
 
 @split_letters()
-@ok( length(vowels$) + 1 == length(consonants$), "pwgen: consonats come first" )
+@ok: length(vowels$) + 1 == length(consonants$), "consonats come first"
 
 @done_testing()
 
