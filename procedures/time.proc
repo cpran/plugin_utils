@@ -93,7 +93,7 @@ endproc
 #!
 procedure parseTime (.date$)
   # Fri Jul 18 18:41:33 2014
-  .date$ = replace_regex$(date$, "  +",  " ", 0)
+  .date$ = replace_regex$(.date$, "  +",  " ", 0)
   @split(" ", .date$)
   if split.length != 5
     exitScript: "Unexpected output from date$()!"
