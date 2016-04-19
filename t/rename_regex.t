@@ -10,21 +10,21 @@ group = 10
 
 @no_plan()
 
-@try: 1, suffix$, ""
-@try: group, suffix$, ""
+@test: 1, suffix$, ""
+@test: group, suffix$, ""
 
-@try: 1, prefix$, ""
-@try: group, prefix$, ""
+@test: 1, prefix$, ""
+@test: group, prefix$, ""
 
-@try: 1, "_([2468])_", "\1_\1"
-@try: group, "_([2468])_", "\1_\1"
+@test: 1, "_([2468])_", "\1_\1"
+@test: group, "_([2468])_", "\1_\1"
 
-@try: 1, "^" + suffix$, "impossible"
-@try: group, prefix$ + "$", "impossible"
+@test: 1, "^" + suffix$, "impossible"
+@test: group, prefix$ + "$", "impossible"
 
 @done_testing()
 
-procedure try: .length, .search$, .replace$
+procedure test: .length, .search$, .replace$
   for i to .length
     name$[i] = prefix$ + string$(i) + suffix$
     textgrid[i] = Create TextGrid: 0, 1, name$[i], ""
