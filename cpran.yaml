@@ -1,12 +1,11 @@
 ---
 Plugin: utils
 Homepage: https://gitlab.com/cpran/plugin_utils
-Version: 0.0.17
+Version: 0.0.18
 Maintainer: José Joaquín Atria <jjatria@gmail.com>
 Depends:
   praat: 5.0.0+
-  Plugins:
-    testsimple: 0.0.1+
+  Plugins: []
 Recommends:
 License: GPL3
 Readme: readme.md
