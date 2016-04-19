@@ -150,36 +150,3 @@ procedure parseTime (.date$)
   .mn = number(split.return$[2]) ; 41
   .sc = number(split.return$[3]) ; 33
 endproc
-
-# Not working, and not sure if this needs to be here at all.
-procedure str2time (.date$)
-  @parseTime(.date$)
-  .time  = time.sc
-  .time += time.mn * 60
-  .time += time.hr * 3600
-
-  @_IsLeapYear(parseTime.yr)
-  .days_per_month$ = if '_IsLeapYear.return'
-    ... then "31 59 90 120 151 181 212 243 273 304 334 365"
-    ... else "31 60 91 121 152 182 213 244 274 305 335 366" fi
-  @split(" ", .days_per_month$)
-
-  if (parseTime.yr >= 1 and parseTime.yr <= 9999) and
-    ... (parseTime.mo >= 1 and parseTime.mo <= 12)
-    .previous_year = parseTime.yr - 1
-    .previous_days = ((.previous_year * 365) + (.previous_year / 4)) -
-      ... ((.previous_year / 100) + (.previous_year / 400))
-    .total_days = ((.previous_days + number(split.return$[parseTime.mo-1])) +
-      ... parseTime.dm) - 1
-  endif
-  .return = .total_days
-endproc
-
-procedure _IsLeapYear (.year)
-  if .year < 1 or .year > 9999
-    existScript: "Year out of bounds: ", .year
-  endif
-  .return = 1
-  .return = if .year mod  4 != 0 then 0 else .return fi
-  .return = if .year mod 100 = 0 then .year mod 400 = 0 else .return fi
-endproc
