@@ -7,10 +7,10 @@ include ../procedures/try.proc
 @compareSemVer: praatVersion$, praatVersion$
 @ok: !compareSemVer.newer, "check same version"
 
-@compareSemVer: "6.0", praatVersion$
+@compareSemVer: "5.0", praatVersion$
 @ok: compareSemVer.newer > 0, "first term is older"
 
-@compareSemVer: praatVersion$, "6.0"
+@compareSemVer: praatVersion$, "5.0"
 @ok: compareSemVer.newer < 0, "second term is older"
 
 call try
