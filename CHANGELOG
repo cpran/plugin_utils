@@ -1,4 +1,7 @@
 - next: # unreleased
+- v0.0.19:
+  - Changes:
+    - Tests now use tap
 - v0.0.18:
   - New:
     - Add a trace procedure, with redirectable output and test sensitivity
