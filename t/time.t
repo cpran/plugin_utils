@@ -1,4 +1,4 @@
-include ../../plugin_testsimple/procedures/simple.proc
+include ../../plugin_tap/procedures/simple.proc
 include ../procedures/time.proc
 
 date$ = date$()

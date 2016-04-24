@@ -1,4 +1,4 @@
-include ../../plugin_testsimple/procedures/simple.proc
+include ../../plugin_tap/procedures/simple.proc
 include ../procedures/utils.proc
 
 @plan(19)
