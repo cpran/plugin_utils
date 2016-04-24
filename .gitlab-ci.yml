@@ -1,6 +1,6 @@
 before_script:
-  - rm -rf ../plugin_testsimple
-  - git clone https://gitlab.com/cpran/plugin_testsimple.git ../plugin_testsimple
+  - rm -rf ../plugin_tap
+  - git clone https://gitlab.com/cpran/plugin_tap.git ../plugin_tap
 
 Praat 5.4:
   script:
