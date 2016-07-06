@@ -42,11 +42,19 @@
 #! and messages will be appended.
 #!
 procedure trace: .msg$
+  if !variableExists("trace.level")
+    .level = 0
+  endif
+
+  if .level
+    .enable = 1
+  endif
+
   if !variableExists("trace.enable")
     .enable = 0
   endif
 
-  if .enable
+  if .enable and .level > 0
     if variableExists("plan.current_plan")
       # In testing mode, preppend a hash to avoid interrupting TAP stream
       .pre$ = "# "
