@@ -1,4 +1,11 @@
 - next: # unreleased
+- v0.0.20:
+  - New:
+    - try: Automatically removes objects created during execution
+      of failing code. Can be changed with try.remove_on_fail
+    - trace: New control variable trace.level for variable verbosity
+  - Changes:
+    - Updated tests to use tap/more
 - v0.0.19:
   - Changes:
     - Tests now use tap
