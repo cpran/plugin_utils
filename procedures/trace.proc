@@ -43,11 +43,7 @@
 #!
 procedure trace: .msg$
   if !variableExists("trace.level")
-    .level = 0
-  endif
-
-  if .level
-    .enable = 1
+    .level = 1
   endif
 
   if !variableExists("trace.enable")
