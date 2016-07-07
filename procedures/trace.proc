@@ -68,7 +68,7 @@ procedure trace: .msg$
 
     if !variableExists("trace.cleared")
       # If tracing to a filename, do not clear by default
-      .cleared = if length(.output$) then 1 else 0 fi
+      .cleared = length(.output$)
     endif
 
     if .output$ != ""
