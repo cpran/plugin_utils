@@ -1,8 +1,3 @@
-# Save all selected objects to disk.
-#
-# The first version of this script was written for the
-# Laboratorio de Fonetica Letras UC
-#
 # This script is part of the utils CPrAN plugin for Praat.
 # The latest version is available through CPrAN or at
 # <http://cpran.net/plugins/utils>
@@ -20,13 +15,29 @@
 # You should have received a copy of the GNU General Public License
 # along with utils. If not, see <http://www.gnu.org/licenses/>.
 #
-# Copyright 2014, 2015 Jose Joaquin Atria
+# Copyright 2014-2016 Jose Joaquin Atria
 
 include ../../plugin_utils/procedures/check_directory.proc
 include ../../plugin_utils/procedures/require.proc
 include ../../plugin_utils/procedures/utils.proc
 @require("5.3.63")
 
+#! ~~~ params
+#! in:
+#!   Save_to: >
+#!     (sentence) The output path for saved files
+#!   Overwrite: >
+#!     (boolean) Whether existing files should be overwritten automativally
+#! ~~~
+#!
+#! Save all selected objects to disk, each as a separate file with the
+#! appropriate format. The output path can be left blank to use a GUI selector.
+#!
+#! Because LongSound objects already represent a file on disk, these are
+#! silently skipped.
+#!
+#! Written originally with support from the Laboratorio de Fonetica Letras UC
+#!
 form Save selected objects...
   sentence Save_to
   comment Leave empty for GUI selector
@@ -41,6 +52,7 @@ total_objects = numberOfSelected()
 for i to total_objects
   my_object[i] = selected(i)
 endfor
+
 original = Create Table with column names: "selection", 0, "name type n id"
 for i to total_objects
   selectObject: my_object[i]

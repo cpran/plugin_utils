@@ -1,5 +1,3 @@
-# Rename multiple objects using regular expressions
-#
 # This script is part of the utils CPrAN plugin for Praat.
 # The latest version is available through CPrAN or at
 # <http://cpran.net/plugins/utils>
@@ -19,6 +17,16 @@
 #
 # Copyright 2015 Jose Joaquin Atria
 
+#! ~~~ params
+#! in:
+#!   Pattern: >
+#!     (sentence) A regular expression pattern to match
+#!   Replacement: >
+#!     (sentence) The string to use as replacement
+#! ~~~
+#!
+#! Rename multiple objects using regular expressions. Changes are made inline.
+#!
 form Rename (regex)...
   sentence Pattern
   sentence Replacement
