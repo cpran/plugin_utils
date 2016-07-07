@@ -20,26 +20,30 @@
 #! ~~~ params
 #! in:
 #!   .msg$: A string to print to trace device
-#!   trace.enable: >
-#!     Trace flag. When set to false, this procedure does nothing
-#!   trace.output$: >
-#!     The filename of an external trace file. If empty, print trace to STDOUT.
-#!   trace.cleared: >
-#!     If false, the device (file or Info window) will be cleared before
-#!     printing the next message. Otherwise, messages will be appended. By
-#!     default, it is set to true when priting to a file, and false otherwise.
 #! ~~~
 #!
-#! Print a trace message, either to STDOUT or to a file, if a trace option
-#! has been set (by setting `trace` to `1`). If the flag has been set to
-#! true, the value of `trace$` is used as the filename of a file to write
-#! to. If that variable is the empty string, the message is printed to
-#! the Info window.
+#! Print a trace message, either to STDOUT or to a file.
 #!
-#! Whether messages are appended to the device or printed to an empty device
-#! can be controlled by setting the value of the `.cleared` variable. When this
-#! variable is true, the device will be considered to have been cleared already,
-#! and messages will be appended.
+#! The behaviour of this procedure is controlled at runtime by a number of
+#! different global flags:
+#!
+#! trace.enable
+#!   : If true, the procedure prints the message. Otherwise, this procedure
+#!     does nothing. False by default.
+#! trace.output$
+#!   : The filename of an external trace file. If empty, the trace is printed
+#!     to the Info window (or STDOUT) instead. Empty by default.
+#! trace.cleared
+#!   : If false, the device (file or Info window) will be cleared before
+#!     printing the next message. Otherwise, messages will be appended. By
+#!     default, it is set to true when priting to a file, and false otherwise.
+#! trace.level
+#!   : In addition to `trace.enable`, the procedure will only print when this
+#!     variable has a value greater than 1. This is useful for dynamically
+#!     increasing or decreasing the verbosity of a script. Set to 1 by default.
+#!
+#! The default values of these flags mean that, unless action is taken, this
+#! procedure will produce no output.
 #!
 procedure trace: .msg$
   if !variableExists("trace.level")
