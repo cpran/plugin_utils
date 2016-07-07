@@ -13,16 +13,12 @@ Description:
   Short: a collection of basic utilities to facilitate scripting
   Long: >
     This plugin provides a series of procedures to facilitate some scripting
-    tasks:
+    tasks, including some basic features that are inexplicably missing from
+    the scripting API (toLower, toUpper, split, ...).
 
-    * Directory and file GUI selectors for initial forms
-    * A method to require specific versions of Praat
-    * Procedures for format-free date manipulation
-    * Procedures to safely create temporary files and directories
-    * Procedures for try/catch-style programming
-    * Count string occurrences with or without regular expressions
-    * `split`
-    * `pwgen`
-    * `zeropad`
-    * `toLower`
-    * `toUpper`
+    The plugin also includes methods for:
+    * batch renaming of objects in the Objects list
+    * safely creating temporary files and directories
+    * free manipulation of date strings
+    * safely running dubious code (as in a try/catch block)
+    * smart and customisable tracing and logging of a script's progress
