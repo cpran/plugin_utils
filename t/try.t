@@ -106,6 +106,37 @@ call try
 
 Remove
 
+select all
+before = numberOfSelected()
+
+# This will fail
+call try
+  ... synth = Create SpeechSynthesizer: "English", "default" 'newline$'
+  ... cureCancer()                                           'newline$'
+
+select all
+@is:  numberOfSelected(), before,
+  ... "No objects left behind from failure"
+
+select all
+before = numberOfSelected()
+
+# This will fail
+try.remove_on_fail = 0
+call try
+  ... synth = Create SpeechSynthesizer: "English", "default" 'newline$'
+  ... cureCancer()                                           'newline$'
+
+select all
+@cmp_ok:  numberOfSelected(), ">", before,
+  ... "Objects left behind from failure"
+
+nocheck selectObject: try.new[1]
+@is$: selected$(), "SpeechSynthesizer English_default",
+  ... "Objects left behind is correct"
+
+Remove
+
 # This will succeed
 call try
   ... synth = Create SpeechSynthesizer: "English", "default" \n
