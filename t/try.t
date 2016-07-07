@@ -1,26 +1,26 @@
-include ../../plugin_tap/procedures/simple.proc
+include ../../plugin_tap/procedures/more.proc
 include ../../plugin_utils/procedures/try.proc
 
-@plan(23)
+@plan: 27
 
 # This will succeed
 tg = Create TextGrid: 0, 1, "test", ""
 call try
   ... Copy: extractWord$(selected$(), " ") + "_copy"
 
-@ok: variableExists("try.catch") and variableExists("try.return"),
+@isnt: variableExists("try.catch") and variableExists("try.return"), 0,
   ... "Return variables exist on success"
 
-@ok:  try.catch != undefined and try.return != undefined,
+@isnt: try.catch != undefined and try.return != undefined, 0,
   ... "Return variables defined on success"
 
-@ok:  try.return,
+@isnt: try.return, 0,
   ... "Return is true on success"
 
-@ok: !try.catch,
+@is:   try.catch, 0,
   ... "Catch is false on success"
 
-@ok: !fileReadable(try.tmp$),
+@is:   fileReadable(try.tmp$), 0,
   ... "Temporary file is deleted on success"
 
 # This will fail
@@ -28,19 +28,19 @@ nocheck removeObject: selected(), tg
 call try
   ... Copy: extractWord$(selected$(), " ") + "_copy"
 
-@ok: variableExists("try.catch") and variableExists("try.return"),
+@isnt: variableExists("try.catch") and variableExists("try.return"), 0,
   ... "Return variables exist on error"
 
-@ok:  try.catch != undefined and try.return != undefined,
+@isnt: try.catch != undefined and try.return != undefined, 0,
   ... "Return variables defined on error"
 
-@ok: !try.return,
+@is:   try.return, 0,
   ... "Return is false on error"
 
-@ok:  try.catch,
+@isnt: try.catch, 0,
   ... "Catch is true on error"
 
-@ok: !fileReadable(try.tmp$),
+@is:   fileReadable(try.tmp$), 0,
   ... "Temporary file is deleted on error"
 
 # This will succeed
@@ -53,19 +53,19 @@ call try
   ... endfor                                'newline$'
   ... removeObject: tg                      'newline$'
 
-@ok: variableExists("try.catch") and variableExists("try.return"),
+@isnt: variableExists("try.catch") and variableExists("try.return"), 0,
   ... "Return variables exist on multiline success"
 
-@ok:  try.catch != undefined and try.return != undefined,
+@isnt: try.catch != undefined and try.return != undefined, 0,
   ... "Return variables defined on multiline success"
 
-@ok:  try.return,
+@isnt: try.return, 0,
   ... "Return is true on multiline success"
 
-@ok: !try.catch,
+@is:   try.catch, 0,
   ... "Catch is false on multiline success"
 
-@ok: !fileReadable(try.tmp$),
+@is: fileReadable(try.tmp$), 0,
   ... "Temporary file is deleted on multiline success"
 
 # This will fail
@@ -77,22 +77,22 @@ call try
   ... endfor                                'newline$'
   ... removeObject: tg
 
-@ok: !numberOfSelected(),
+@is: numberOfSelected(), 0,
   ... "No objects selected from tried code"
 
-@ok: variableExists("try.catch") and variableExists("try.return"),
+@isnt: variableExists("try.catch") and variableExists("try.return"), 0,
   ... "Return variables exist on multiline error"
 
-@ok:  try.catch != undefined and try.return != undefined,
+@isnt: try.catch != undefined and try.return != undefined, 0,
   ... "Return variables defined on multiline error"
 
-@ok: !try.return,
+@is:   try.return, 0,
   ... "Return is false on multiline error"
 
-@ok:  try.catch,
+@isnt: try.catch, 0,
   ... "Catch is true on multiline error"
 
-@ok: !fileReadable(try.tmp$),
+@is: fileReadable(try.tmp$), 0,
   ... "Temporary file is deleted on multiline error"
 
 # This will succeed
@@ -101,7 +101,7 @@ call try
   ... To Sound: "This is some text", "yes"                   'newline$'
   ... removeObject: synth                                    'newline$'
 
-@ok: numberOfSelected() == 2,
+@is:  numberOfSelected(), 2,
   ... "Multiple object selection maintained from tried code"
 
 Remove
@@ -112,9 +112,11 @@ call try
   ... To Sound: "This is some text", "yes"                   \n
   ... removeObject: synth                                    \n
 
-@ok: numberOfSelected() == 2,
+@is:  numberOfSelected(), 2,
   ... "Automatic newline conversion"
 
 Remove
+
+@ok_selection()
 
 @done_testing()

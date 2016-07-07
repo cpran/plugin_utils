@@ -1,14 +1,11 @@
-include ../../plugin_tap/procedures/simple.proc
+include ../../plugin_tap/procedures/more.proc
 include ../../plugin_utils/procedures/utils.proc
-
-clearinfo
-@normalPrefDir()
 
 prefix$ = "name_"
 suffix$ = "_number"
 group = 10
 
-@no_plan()
+@plan: 17
 
 @test: 1, suffix$, ""
 @test: group, suffix$, ""
@@ -21,6 +18,8 @@ group = 10
 
 @test: 1, "^" + suffix$, "impossible"
 @test: group, prefix$ + "$", "impossible"
+
+@ok_selection()
 
 @done_testing()
 
@@ -35,20 +34,25 @@ procedure test: .length, .search$, .replace$
     plusObject: textgrid[i]
   endfor
 
-  runScript: "../scripts/rename_regex.praat",
-    ... .search$, .replace$
+  runScript: "../scripts/rename_regex.praat", .search$, .replace$
 
-  @ok_formula: "numberOfSelected() == " + string$(.length), "renamed " +
-    ... if .length == 1 then "object" else "group" fi + " is selected"
+  @is: numberOfSelected(), .length,
+    ... "renamed " + if .length == 1 then "object" else "group" fi +
+    ... " is selected"
+
   .good = 1
   for i to .length
-    if replace_regex$(name$[i], .search$, .replace$, 0) != extractWord$(selected$(i), " ")
+    .got$      = extractWord$(selected$(i), " ")
+    .expected$ = replace_regex$(name$[i], .search$, .replace$, 0)
+    if .got$ != .expected$
       .good = 0
     endif
-    #appendInfoLine: extractWord$(selected$(), " ")
   endfor
-  @ok: .good, "rename replaced """ + .search$ + """ with """ + .replace$ + """ from " +
-    ... if .length == 1 then "single object" else "multiple objects" fi
+
+  @isnt: .good, 0,
+    ... "rename replaced """ + .search$ +
+    ... """ with """ + .replace$ + """ from " +
+    ... if .length == 1 then "a single object" else "multiple objects" fi
 
   nocheck selectObjet: undefined
   for i to .length

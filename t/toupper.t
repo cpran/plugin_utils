@@ -1,18 +1,20 @@
-include ../../plugin_tap/procedures/simple.proc
+include ../../plugin_tap/procedures/more.proc
 include ../procedures/utils.proc
 
-@plan(4)
+@plan: 5
 
-@toUpper("Abraham Lincoln")
-@ok( !index_regex(toUpper.return$, "[a-z]"), "works on mixed case" )
+@toUpper: "Abraham Lincoln"
+@like: toUpper.return$, "[a-z]", "works on mixed case"
 
-@toUpper("abraham lincoln")
-@ok( !index_regex(toUpper.return$, "[a-z]"), "works on all lowercase" )
+@toUpper: "abraham lincoln"
+@like: toUpper.return$, "[a-z]", "works on all lowercase"
 
-@toUpper("ABRAHAM LINCOLN")
-@ok( !index_regex(toUpper.return$, "[a-z]"), "works on all uppercase" )
+@toUpper: "ABRAHAM LINCOLN"
+@like: toUpper.return$, "[a-z]", "works on all uppercase"
 
-@toUpper("")
-@ok( !index_regex(toUpper.return$, "[a-z]"), "works on empty strings" )
+@toUpper: ""
+@like: toUpper.return$, "[a-z]", "works on empty strings"
+
+@ok_selection()
 
 @done_testing()

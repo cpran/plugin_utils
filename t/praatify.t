@@ -1,18 +1,20 @@
-include ../../plugin_tap/procedures/simple.proc
+include ../../plugin_tap/procedures/more.proc
 include ../procedures/utils.proc
 
-@no_plan()
+@plan: 4
 
 @praatifyString: "string with spaces"
-@ok: praatifyString.return$ == "string_with_spaces",
+@is$: praatifyString.return$, "string_with_spaces",
   ... "string with spaces"
 
 @praatifyString: ""
-@ok: praatifyString.return$ == "",
+@is$: praatifyString.return$, "",
   ... "empty string"
 
 @praatifyString: "Hello, World!"
-@ok: praatifyString.return$ == "Hello__World_",
+@is$: praatifyString.return$, "Hello__World_",
   ... "string with punctuation"
+
+@ok_selection()
 
 @done_testing()

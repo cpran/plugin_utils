@@ -1,70 +1,72 @@
-include ../../plugin_tap/procedures/simple.proc
+include ../../plugin_tap/procedures/more.proc
 include ../procedures/utils.proc
 
-@plan(19)
+@plan: 20
 
 @find: "tmp.*", "tmp\.[a-z0-9]{10}"
-@ok: !find.return,
+@is: find.return, 0,
   ... "No directories match default template"
 
 @mktemp: ""
 
-@ok: mktemp.return$ != "",
+@isnt$: mktemp.return$, "",
   ... "Name is not empty string"
-@ok: index_regex(mktemp.return$, "tmp\.[a-z0-9]{10}/$"),
+@like: mktemp.return$, "tmp\.[a-z0-9]{10}/$",
   ... "Empty input uses default template"
-@ok: fileReadable(mktemp.return$),
+@isnt: fileReadable(mktemp.return$), 0,
   ... "Directory was created"
 
 deleteFile(mktemp.return$)
-@ok: !fileReadable(mktemp.return$),
+@is: fileReadable(mktemp.return$), 0,
   ... "Directory was removed"
 
 @find: "mktempdirtest_.*", "mktempdirtest_[a-z0-9]{7}"
-@ok: !find.return,
+@is: find.return, 0,
   ... "No directories match template"
 
 @mktemp: "mktempdirtest_XXXXXXX"
-@ok: mktemp.name$ != "",
+@isnt$: mktemp.name$, "",
   ... "Name is not empty string"
-@ok: index_regex(mktemp.return$, "mktempdirtest_[a-z0-9]{7}/$"),
+@like: mktemp.return$, "mktempdirtest_[a-z0-9]{7}/$",
   ... "Resulting name matches template"
 
 deleteFile(mktemp.return$)
-@ok: !fileReadable(mktemp.return$),
+@is: fileReadable(mktemp.return$), 0,
   ... "Directory was removed"
 
 @find: "mktempdirtest_.*", "mktempdirtest_[a-z0-9]{2}"
-@ok: !find.return,
+@is: find.return, 0,
   ... "No directories match incorrect template"
 
 @mktemp: "mktempdirtest_XX"
-@ok: mktemp.name$ == "--undefined--",
+@is$: mktemp.name$, string$(undefined),
   ..."Name is undefined with wrong input"
-@ok: !fileReadable(mktemp.return$),
+@is: fileReadable(mktemp.return$), 0,
   ... "Directory was not created with wrong input"
 
 @find: "mktempdirtest.*", "mktempdirtest"
-@ok: !find.return,
+@is: find.return, 0,
   ... "No directories match incorrect template"
 
 @mktemp: "mktempdirtest"
-@ok: mktemp.name$ != "",
+@isnt$: mktemp.name$, "",
   ... "Name is not empty string"
-@ok: mktemp.name$ == "--undefined--",
+@is$: mktemp.name$, string$(undefined),
   ..."Name is undefined with wrong input"
-@ok: !fileReadable(mktemp.return$),
+@is: fileReadable(mktemp.return$), 0,
   ... "Directory was not created with wrong input"
 
 @mktemp: "XXXXXXXXXXXXXXXXXX"
-@ok: mktemp.name$ != "",
+@isnt$: mktemp.name$, "",
   ... "Name is not empty string"
-@ok: fileReadable(mktemp.return$),
+@isnt: fileReadable(mktemp.return$), 0,
   ... "Directory was created"
 
 deleteFile(mktemp.return$)
-@ok: !fileReadable(mktemp.return$),
+@is: fileReadable(mktemp.return$), 0,
   ... "Directory was removed"
+
+@ok_selection()
 
 @done_testing()
 

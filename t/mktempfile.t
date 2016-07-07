@@ -1,96 +1,98 @@
-include ../../plugin_tap/procedures/simple.proc
+include ../../plugin_tap/procedures/more.proc
 include ../procedures/utils.proc
 
-@plan(27)
+@plan: 28
 
 @find: "tmp.*", "tmp\.[a-z0-9]{10}"
-@ok: !find.return,
+@is: find.return, 0,
   ... "No file matches default template"
 
 @mktempfile: "", ""
 
-@ok: mktempfile.return$ != "",
+@isnt$: mktempfile.return$, "",
   ... "Name is not empty string"
-@ok: index_regex(mktempfile.return$, "tmp\.[a-z0-9]{10}$"),
+@like: mktempfile.return$, "tmp\.[a-z0-9]{10}$",
   ... "Empty input uses default template without extension"
-@ok: fileReadable(mktempfile.return$),
+@isnt: fileReadable(mktempfile.return$), 0,
   ... "File was created"
 
 deleteFile(mktempfile.return$)
-@ok: !fileReadable(mktempfile.return$),
+@is: fileReadable(mktempfile.return$), 0,
   ... "File was removed"
 
 @mktempfile: "", "ext"
 
-@ok: mktempfile.return$ != "",
+@isnt$: mktempfile.return$, "",
   ... "Name is not empty string"
-@ok: index_regex(mktempfile.return$, "tmp\.[a-z0-9]{10}\.ext$"),
+@like: mktempfile.return$, "tmp\.[a-z0-9]{10}\.ext$",
   ... "Empty input uses default template with extension"
-@ok: fileReadable(mktempfile.return$),
+@isnt: fileReadable(mktempfile.return$), 0,
   ... "File was created"
 
 deleteFile(mktempfile.return$)
-@ok: !fileReadable(mktempfile.return$),
+@is: fileReadable(mktempfile.return$), 0,
   ... "File was removed"
 
 @mktempfile: "", ".ext"
 
-@ok: mktempfile.return$ != "",
+@isnt$: mktempfile.return$, "",
   ... "Name is not empty string"
-@ok: index_regex(mktempfile.return$, "tmp\.[a-z0-9]{10}\.ext$"),
+@like: mktempfile.return$, "tmp\.[a-z0-9]{10}\.ext$",
   ... "Empty input uses default template with extension with period"
-@ok: fileReadable(mktempfile.return$),
+@isnt: fileReadable(mktempfile.return$), 0,
   ... "File was created"
 
 deleteFile(mktempfile.return$)
-@ok: !fileReadable(mktempfile.return$),
+@is: fileReadable(mktempfile.return$), 0,
   ... "File was removed"
 
 @find: "mktempfiletest_.*", "mktempfiletest_[a-z0-9]{7}"
-@ok: !find.return,
+@is: find.return, 0,
   ... "No file matches template"
 
 @mktempfile: "mktempfiledirtest_XXXXXXX", "praat"
-@ok: mktempfile.name$ != "",
+@isnt$: mktempfile.name$, "",
   ... "Name is not empty string"
-@ok: index_regex(mktempfile.return$, "mktempfiledirtest_[a-z0-9]{7}.praat$"),
+@like: mktempfile.return$, "mktempfiledirtest_[a-z0-9]{7}.praat$",
   ... "Resulting name matches template"
 
 deleteFile(mktempfile.return$)
-@ok: !fileReadable(mktempfile.return$),
+@is: fileReadable(mktempfile.return$), 0,
   ... "Directory was removed"
 
 @find: "mktempfiledirtest_.*", "mktempfiledirtest_[a-z0-9]{2}"
-@ok: !find.return,
+@is: find.return, 0,
   ... "No directories match incorrect template"
 
 @mktempfile: "mktempfiledirtest_XX", ""
-@ok: mktempfile.name$ == "--undefined--",
+@is$: mktempfile.name$, string$(undefined),
   ..."Name is undefined with wrong input"
-@ok: !fileReadable(mktempfile.return$),
+@is: fileReadable(mktempfile.return$), 0,
   ... "File was not created with wrong input"
 
 @find: "mktempfiledirtest.*", "mktempfiledirtest"
-@ok: !find.return,
+@is: find.return, 0,
   ... "No files match incorrect template"
 
 @mktempfile: "mktempfiledirtest", ""
-@ok: mktempfile.name$ != "",
+@isnt$: mktempfile.name$, "",
   ... "Name is not empty string"
-@ok: mktempfile.name$ == "--undefined--",
+@is$: mktempfile.name$, string$(undefined),
   ..."Name is undefined with wrong input"
-@ok: !fileReadable(mktempfile.return$),
+@is: fileReadable(mktempfile.return$), 0,
   ... "File was not created with wrong input"
 
 @mktempfile: "XXXXXXXXXXXXXXXXXX", "asdasd"
-@ok: mktempfile.name$ != "",
+@isnt$: mktempfile.name$, "",
   ... "Name is not empty string"
-@ok: fileReadable(mktempfile.return$),
+@isnt: fileReadable(mktempfile.return$), 0,
   ... "File was created"
 
 deleteFile(mktempfile.return$)
-@ok: !fileReadable(mktempfile.return$),
+@is: fileReadable(mktempfile.return$), 0,
   ... "Directory was removed"
+
+@ok_selection()
 
 @done_testing()
 

@@ -1,20 +1,22 @@
-include ../../plugin_tap/procedures/simple.proc
+include ../../plugin_tap/procedures/more.proc
 include ../procedures/utils.proc
 
-@plan(4)
+@plan: 5
 
-@pwgen(10)
+@pwgen: 10
 
-@ok: pwgen.return$ != "",        "string not empty"
-@ok: length(pwgen.return$) = 10, "string has right length"
-
-@split_letters()
-@ok: length(vowels$) == length(consonants$), "vowel and consonat parity"
-
-@pwgen(9)
+@isnt$: pwgen.return$,         "", "string not empty"
+@is:    length(pwgen.return$), 10, "string has right length"
 
 @split_letters()
-@ok: length(vowels$) + 1 == length(consonants$), "consonats come first"
+@is: length(vowels$), length(consonants$), "vowel and consonant parity"
+
+@pwgen: 9
+
+@split_letters()
+@is: length(vowels$) + 1, length(consonants$), "consonants come first"
+
+@ok_selection()
 
 @done_testing()
 

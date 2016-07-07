@@ -1,10 +1,10 @@
-include ../../plugin_tap/procedures/simple.proc
+include ../../plugin_tap/procedures/more.proc
 include ../procedures/time.proc
 
 date$ = date$()
 @time()
 
-@plan(3)
+@plan: 3
 
 filler$ = if windows then "0" else " " fi
 test$ = left$(time.dw$, 3) + " " +
@@ -14,16 +14,16 @@ test$ = left$(time.dw$, 3) + " " +
     ... time.tm$           + " " +
     ... string$(time.yr)
 
-@ok( if date$ = test$ then 1 else 0 fi , "can reproduce native format" )
+@is$: date$, test$, "can reproduce native format"
 appendInfoLine: "# ", date$, " = ", test$
 
 date$ = "Tue Apr 19 21:57:02 2016"
 @parseTime: date$
 
-@ok: parseTime.dw$ == "Tuesday",
+@is$: parseTime.dw$, "Tuesday",
   ... "can find full name of day"
 
-@ok: parseTime.mo$ == "April",
+@is$: parseTime.mo$, "April",
   ... "can find full name of month"
 
 @done_testing()
