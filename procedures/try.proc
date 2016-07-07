@@ -19,6 +19,10 @@
 
 include ../../plugin_utils/procedures/utils.proc
 
+if !variableExists("try.remove_on_fail")
+  try.remove_on_fail = 1
+endif
+
 #! ~~~ params
 #! in:
 #!   .src$: The source of a Praat script, as a string
@@ -56,6 +60,10 @@ include ../../plugin_utils/procedures/utils.proc
 #! the code passed as the argument to `@try` will be kept. Otherwise, the
 #! selection active at the time `@try` was called will be restored.
 #!
+#! Objects created during execution of failing code will be removed
+#! automatically. If this is not desirable, this behaviour can be modified by
+#! setting the `try.remove_on_fail` variable to a false value.
+#!
 #! Control variables are also provided to make it easy to check whether any
 #! errors were encountered. The `.return` variable will be true if the code
 #! executed without errors, and false otherwise. For convenience, a separate
@@ -86,6 +94,19 @@ procedure try .src$
   .n = numberOfSelected()
   for .i to .n
     .id[.i] = selected(.i)
+  endfor
+
+  # Remember existing objects to identify newly created ones
+  select all
+  .nold = numberOfSelected()
+  for .i to .nold
+    .old[.i] = selected(.i)
+  endfor
+
+  # Restore original selection
+  nocheck selectObject: undefined
+  for .i to .n
+    nocheck plusObject: .id[.i]
   endfor
 
   # Code is isolated into a separate file
@@ -133,6 +154,25 @@ procedure try .src$
 
   .return = if .return == undefined then 0 else .return fi
   .catch = !.return
+
+  # Remove created objects
+  if try.catch
+    select all
+    .nn = numberOfSelected()
+    if .nold < .nn
+      for .i to .nold
+        nocheck minusObject: .old[.i]
+      endfor
+      if try.remove_on_fail
+        nocheck Remove
+      else
+        .nn = numberOfSelected()
+        for .i to .nn
+          .new[.i] = selected(.i)
+        endfor
+      endif
+    endif
+  endif
 
   # If an error was found in the tried code, restore the original selection
   if .catch
