@@ -22,7 +22,21 @@
 #!   .msg$: A string to print to trace device
 #! ~~~
 #!
-#! Print a trace message, either to STDOUT or to a file.
+#! ~~~ praat synopsis
+#! include path/to/trace.proc
+#! @trace: "Not printed"
+#!
+#! trace.enable = 1
+#! @trace: "Printed to STDOUT"
+#!
+#! trace.output$ = preferencesDirectory$ + "/praat.log"
+#! @trace: "Append " + string$(number) + " to a file"
+#! ~~~
+#!
+#! Prints a trace message, either to STDOUT or to a file. Because of the way
+#! procedures parse their arguments, the message passed to `@trace` must be a
+#! single string, which means that any number-to-string conversion must be done
+#! manually.
 #!
 #! The behaviour of this procedure is controlled at runtime by a number of
 #! different global flags:
