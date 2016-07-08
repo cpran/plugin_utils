@@ -1,15 +1,83 @@
 include ../../plugin_tap/procedures/more.proc
 include ../procedures/utils.proc
 
-@plan: 3
+@no_plan()
+
+string$ = ""
+@split: "",  string$
+@is:  split.length, 1,
+  ... "split empty string with empty string"
+@is$: split.return$[1], string$,
+  ... "returned empty string"
+
+@split: ",", string$
+@is:  split.length, 1,
+  ... "split empty string with separator"
+@is$: split.return$[1], string$,
+  ... "returned empty string"
 
 string$ = "apple"
-random$ = string$
-string$ = "a," + random$ + ",a"
-@split: ",", string$
+@split: "",  string$
+@is:  split.length,     length(string$),
+  ... "one chunk per character with empty separator"
 
-@is:  split.length,     3,                "right number of chunks"
-@is$: split.return$[2], random$,          "indexing works"
-@is$: split.return$[1], split.return$[3], "string properly split"
+@test: string$
+@isnt: test.pass, 0,
+  ... "empty separator splits at every char"
+
+@split: ",", string$
+@is:  split.length, 1,
+  ... "split string with missing separator"
+@is$: split.return$[1], string$,
+  ... "returned same string"
+
+string$ = "a,b,c"
+@split: ",", string$
+@is:  split.length, 3,
+  ... "split string with existing separator"
+
+@test: "abc"
+@isnt: test.pass, 0,
+  ... "returned good chunks"
+
+string$ = ",,,"
+@split: ",", string$
+@is:  split.length, 4,
+  ... "split string of separators"
+
+@test: ""
+@isnt: test.pass, 0,
+  ... "returned empty chunks"
+
+string$ = "a--b--c"
+@split: "--", string$
+@is:  split.length, 3,
+  ... "split string with multi-character separator"
+
+@test: "abc"
+@isnt: test.pass, 0,
+  ... "returned good chunks"
+
+string$ = "a,b,c"
+split.stop_at = 2
+@split: ",", string$
+@is:  split.length, 2,
+  ... "interrupted splitting"
+@is$: split.return$[2], "b,c",
+  ... "reset stop variable"
+@is:  split.stop_at, 0,
+  ... "reset stop variable"
+
+@ok_selection()
 
 @done_testing()
+
+procedure test: .str$
+  .pass = 1
+  for i to split.length
+    if split.return$[i] != mid$(.str$, i, 1)
+      @trace: ">" + split.return$[i] + "<   >" + mid$(.str$, i, 1) + "<"
+      .pass = 0
+    endif
+  endfor
+endproc
