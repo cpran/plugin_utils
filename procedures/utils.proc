@@ -133,6 +133,10 @@ procedure rndstr (.length, .charset$)
   endfor
 endproc
 
+if !variableExists("split.stop_at")
+  split.stop_at = 0
+endif
+
 #! ~~~ params
 #! in:
 #!   .separator$: The literal separator string
@@ -166,21 +170,38 @@ endproc
 procedure split (.sep$, .str$)
   .seplen = length(.sep$)
   .length = 0
+
   repeat
     .strlen = length(.str$)
     .sep = index(.str$, .sep$)
-    if .sep > 0
-      .part$ = left$(.str$, .sep-1)
-      .str$ = mid$(.str$, .sep+.seplen, .strlen)
-    else
-      .part$ = .str$
-    endif
-    .length = .length+1
-    .return$[.length] = .part$
+    .sep = if .sep then .sep else .strlen + 1 fi
 
-    # For backwards compatibility only! Will disappear!
-    .array$[.length] = .part$
-  until .sep = 0
+    .part$ = left$(.str$, if .seplen > 0 then .sep - 1 else 1 fi)
+    .str$  = mid$( .str$, .sep, .strlen)
+
+    if .sep$ == "" and .str$ == ""
+      .next = 0
+      if !.length
+        .length += 1
+        .return$[.length] = .part$
+      endif
+    else
+      .next = left$(.str$, .seplen) == .sep$
+      .length += 1
+
+      if .stop_at and .length >= .stop_at
+        .part$ = .part$ + .str$
+        .next = 0
+      endif
+      .return$[.length] = .part$
+    endif
+
+    if .next
+      .str$  = mid$( .str$, 1 + if .seplen then .seplen else 1 fi, .strlen)
+    endif
+  until !.next
+
+  .stop_at = 0
 endproc
 
 # Returns the number of occurences of a given character in a string (deprecated)
