@@ -1,4 +1,12 @@
 - next: # unreleased
+- v0.0.21:
+  - New:
+    - Added a script for simplification of Table and TableOfReal objects
+    - Procedures in "require" can now parse semantic versioning strings
+  - Fixed:
+    - Improved behaviour of split with empty strings and separators
+    - Expanded tests for split and for new procedures
+    - Improved documentation of trace
 - v0.0.20:
   - New:
     - try: Automatically removes objects created during execution
