@@ -6,7 +6,7 @@ variables:
 before_script:
   - cpran init
   - cpran update
-  - cpran deps utils | cpran --yes install --notest -
+  - cpran deps | cpran --yes install --notest -
 
 Praat:
   script:
