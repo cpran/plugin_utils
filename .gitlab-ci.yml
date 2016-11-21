@@ -1,12 +1,15 @@
 image: cpran:latest
 
+variables:
+  CPRAN_PREF_DIR: CI_PROJECT_DIR
+
 before_script:
-  - cpran --pref-dir=".." init
-  - cpran --pref-dir=".." update
-  - cpran --pref-dir=".." deps utils | cpran --pref-dir=".." --yes install --notest -
+  - cpran init
+  - cpran update
+  - cpran deps utils | cpran --yes install --notest -
 
 Praat:
   script:
-    - prove -v --exec "praat --ansi --pref-dir=../.. --run"
+    - prove -v --exec "praat --ansi --pref-dir=$CPRAN_PREF_DIR --run"
   tags:
     - cpran
