@@ -1,44 +1,12 @@
+image: cpran:latest
+
 before_script:
-  - rm -rf ../plugin_tap
-  - git clone https://gitlab.com/cpran/plugin_tap.git ../plugin_tap
+  - cpran --pref-dir=".." init
+  - cpran --pref-dir=".." update
+  - cpran --pref-dir=".." deps utils | cpran --pref-dir=".." --yes install --notest -
 
-Praat 5.4:
+Praat:
   script:
-    - prove -v --exec "praat-5.4.00"
-  tags:
-    - cpran
-  allow_failure: true
-
-Praat 5.4.22:
-  script:
-    - prove -v --exec "praat-5.4.22 --ansi --pref-dir=../.."
-  tags:
-    - cpran
-  allow_failure: true
-
-Praat 6.0.03:
-  script:
-    - prove -v --exec "praat-6.0.03 --ansi --pref-dir=../.. --run"
-  tags:
-    - cpran
-  allow_failure: true
-
-Praat 6.0.17:
-  script:
-    - prove -v --exec "praat-6.0.17 --ansi --pref-dir=../.. --run"
-  tags:
-    - cpran
-  allow_failure: true
-
-Praat 6.0.18:
-  script:
-    - prove -v --exec "praat-6.0.18 --ansi --pref-dir=../.. --run"
-  tags:
-    - cpran
-  allow_failure: true
-
-Praat 6.0.19:
-  script:
-    - prove -v --exec "praat-6.0.19 --ansi --pref-dir=../.. --run"
+    - prove -v --exec "praat --ansi --pref-dir=../.. --run"
   tags:
     - cpran
