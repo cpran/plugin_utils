@@ -1,7 +1,7 @@
 image: cpran:latest
 
 variables:
-  CPRAN_PREF_DIR: CI_PROJECT_DIR
+  CPRAN_PREF_DIR: $CI_PROJECT_DIR
 
 before_script:
   - cpran init
