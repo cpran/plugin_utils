@@ -14,8 +14,9 @@ test$ = left$(time.dw$, 3) + " " +
     ... time.tm$           + " " +
     ... string$(time.yr)
 
+@todo: 1, "Is this test locale dependent?"
 @is$: date$, test$, "can reproduce native format"
-appendInfoLine: "# ", date$, " = ", test$
+@diag: date$ + " = " + test$
 
 date$ = "Tue Apr 19 21:57:02 2016"
 @parseTime: date$
