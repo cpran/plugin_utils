@@ -2,7 +2,7 @@ include ../../plugin_tap/procedures/more.proc
 
 utils$ = preferencesDirectory$ + "/plugin_utils/scripts/"
 
-@no_plan()
+@plan: 8
 
 numeric_table = Create Table with column names: "nums", 0, "numa numb numc"
 for r to 10
