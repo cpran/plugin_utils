@@ -22,7 +22,7 @@ string$ = "apple"
   ... "one chunk per character with empty separator"
 
 @test: string$
-@isnt: test.pass, 0,
+@is_true: test.pass,
   ... "empty separator splits at every char"
 
 @split: ",", string$
@@ -37,7 +37,7 @@ string$ = "a,b,c"
   ... "split string with existing separator"
 
 @test: "abc"
-@isnt: test.pass, 0,
+@is_true: test.pass,
   ... "returned good chunks"
 
 string$ = ",,,"
@@ -46,7 +46,7 @@ string$ = ",,,"
   ... "split string of separators"
 
 @test: ""
-@isnt: test.pass, 0,
+@is_true: test.pass,
   ... "returned empty chunks"
 
 string$ = "a--b--c"
@@ -55,7 +55,7 @@ string$ = "a--b--c"
   ... "split string with multi-character separator"
 
 @test: "abc"
-@isnt: test.pass, 0,
+@is_true: test.pass,
   ... "returned good chunks"
 
 string$ = "a,b,c"

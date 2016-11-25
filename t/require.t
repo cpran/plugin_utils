@@ -7,21 +7,21 @@ include ../procedures/try.proc
 call try
   ... include ../procedures/require.proc \n
   ... @require: praatVersion$            \n
-@is: try.catch, 0, "no errors when requiring current version"
+@is_false: try.catch, "no errors when requiring current version"
 
 call try
   ... include ../procedures/require.proc \n
   ... @require: ""                       \n
-@is: try.catch, 1, "cannot require an empy string"
+@is_true: try.catch, "cannot require an empty string"
 
 call try
   ... include ../procedures/require.proc \n
   ... @require: "jodge the squire"       \n
-@is: try.catch, 1, "cannot require a non-version string"
+@is_true: try.catch, "cannot require a non-version string"
 
 call try
   ... include ../procedures/require.proc \n
   ... @require: "1" + praatVersion$      \n
-@isnt: try.catch, 0, "requiring higher version exits"
+@is_true: try.catch, "requiring higher version exits"
 
 @done_testing()

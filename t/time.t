@@ -27,5 +27,3 @@ date$ = "Tue Apr 19 21:57:02 2016"
   ... "can find full name of month"
 
 @done_testing()
-
-

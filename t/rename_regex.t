@@ -49,7 +49,7 @@ procedure test: .length, .search$, .replace$
     endif
   endfor
 
-  @isnt: .good, 0,
+  @is_true: .good,
     ... "rename replaced """ + .search$ +
     ... """ with """ + .replace$ + """ from " +
     ... if .length == 1 then "a single object" else "multiple objects" fi

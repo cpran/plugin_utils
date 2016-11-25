@@ -13,15 +13,15 @@ include ../procedures/utils.proc
   ... "Name is not empty string"
 @like: mktemp.return$, "tmp\.[a-z0-9]{10}/$",
   ... "Empty input uses default template"
-@isnt: fileReadable(mktemp.return$), 0,
+@is_true: fileReadable(mktemp.return$),
   ... "Directory was created"
 
 deleteFile(mktemp.return$)
-@is: fileReadable(mktemp.return$), 0,
+@is_false: fileReadable(mktemp.return$),
   ... "Directory was removed"
 
 @find: "mktempdirtest_.*", "mktempdirtest_[a-z0-9]{7}"
-@is: find.return, 0,
+@is_false: find.return,
   ... "No directories match template"
 
 @mktemp: "mktempdirtest_XXXXXXX"
@@ -31,21 +31,21 @@ deleteFile(mktemp.return$)
   ... "Resulting name matches template"
 
 deleteFile(mktemp.return$)
-@is: fileReadable(mktemp.return$), 0,
+@is_false: fileReadable(mktemp.return$),
   ... "Directory was removed"
 
 @find: "mktempdirtest_.*", "mktempdirtest_[a-z0-9]{2}"
-@is: find.return, 0,
+@is_false: find.return,
   ... "No directories match incorrect template"
 
 @mktemp: "mktempdirtest_XX"
 @is$: mktemp.name$, string$(undefined),
   ..."Name is undefined with wrong input"
-@is: fileReadable(mktemp.return$), 0,
+@is_false: fileReadable(mktemp.return$),
   ... "Directory was not created with wrong input"
 
 @find: "mktempdirtest.*", "mktempdirtest"
-@is: find.return, 0,
+@is_false: find.return,
   ... "No directories match incorrect template"
 
 @mktemp: "mktempdirtest"
@@ -53,17 +53,17 @@ deleteFile(mktemp.return$)
   ... "Name is not empty string"
 @is$: mktemp.name$, string$(undefined),
   ..."Name is undefined with wrong input"
-@is: fileReadable(mktemp.return$), 0,
+@is_false: fileReadable(mktemp.return$),
   ... "Directory was not created with wrong input"
 
 @mktemp: "XXXXXXXXXXXXXXXXXX"
 @isnt$: mktemp.name$, "",
   ... "Name is not empty string"
-@isnt: fileReadable(mktemp.return$), 0,
+@is_true: fileReadable(mktemp.return$),
   ... "Directory was created"
 
 deleteFile(mktemp.return$)
-@is: fileReadable(mktemp.return$), 0,
+@is_false: fileReadable(mktemp.return$),
   ... "Directory was removed"
 
 @ok_selection()

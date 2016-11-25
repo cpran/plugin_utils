@@ -25,7 +25,10 @@ runScript: utils$ + "simplify_table.praat", 3, suffix$, ""
 @is$: selected$("Table"), name$ + suffix$,
   ... "appended suffix to table name"
 
-@is: objectsAreIdentical(numeric_table, selected()), 0,
+@isnt: numeric_copy, selected(),
+  ... "selection changed with suffix"
+
+@is_false: objectsAreIdentical(numeric_table, selected()),
   ... "changes not inline with suffix"
 
 Remove
@@ -40,7 +43,7 @@ runScript: utils$ + "simplify_table.praat", 3, "", ""
 @is: numeric_copy, selected(),
   ... "no change in selection without suffix"
 
-@is: objectsAreIdentical(numeric_table, selected()), 0,
+@is_false: objectsAreIdentical(numeric_table, selected()),
   ... "changes inline without suffix"
 
 removeObject: numeric_copy, numeric_table
