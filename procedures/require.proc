@@ -23,7 +23,7 @@ call require 5.3.46
 
 #! ~~~ params
 #! in:
-#!   .version$: A version string to require.
+#!   .version$: A version string or plugin name to require
 #! seealso:
 #!   - utils@semver_compare
 #! ~~~
@@ -35,11 +35,26 @@ call require 5.3.46
 #! Praat version strings are parsed by `@semver` and compared with
 #! `@semver_compare`.
 #!
-procedure require .version$
-  call semver_compare "'.version$'" 'praatVersion$'
-  if semver_compare.return < 0
-    exit This script requires Praat v'.version$'.
-      ... Please update Praat'newline$'
+#! If passed a non-version string, the procedure will interpret it as the name
+#! of a plugin, and test the existence of that plugin under the preferences
+#! directory.
+#!
+procedure require .requirement$
+  if .requirement$ == ""
+    exit Cannot require the empty string'newline$'
+  endif
+
+  if index_regex(.requirement$, "[0-9]+(\.[0-9]+){0,2}(-[a-zA-Z0-9-]+)?(\+[a-zA-Z0-9-]+)?")
+    call semver_compare "'.requirement$'" 'praatVersion$'
+    if semver_compare.return < 0
+      exit This script requires Praat v'.requirement$'.
+        ... Please update Praat'newline$'
+    endif
+  else
+    if !fileReadable(preferencesDirectory$ + "/plugin_" + .requirement$)
+      exit This script requires the '.requirement$' plugin.
+        ... Please install and retry'newline$'
+    endif
   endif
 endproc
 
