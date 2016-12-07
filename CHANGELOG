@@ -1,4 +1,5 @@
 - next: # unreleased
+- v0.0.22:
   - New:
     - Passing a non-version string to @require will interpret it as the
       name of a plugin, and test for its existence in the preferences directory
