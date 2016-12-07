@@ -54,6 +54,11 @@ string$ = "a--b--c"
 @is:  split.length, 3,
   ... "split string with multi-character separator"
 
+string$ = "a b c"
+@split: " ", string$
+@is:  split.length, 3,
+  ... "split string with whitespace separator"
+
 @test: "abc"
 @is_true: test.pass,
   ... "returned good chunks"
