@@ -1,4 +1,11 @@
 - next: # unreleased
+  - New:
+    - Passing a non-version string to @require will interpret it as the
+      name of a plugin, and test for its existence in the preferences directory
+    - Loading strutils/array.proc before utils.proc modifies the
+      behaviour of @split, which now also pushes to a Strings array
+  - Fixed:
+    - Added missing test plans
 - v0.0.21:
   - New:
     - Added a script for simplification of Table and TableOfReal objects
