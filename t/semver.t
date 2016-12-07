@@ -67,7 +67,7 @@ procedure test: .str$
   .pass = 1
   for i to split.length
     if split.return$[i] != mid$(.str$, i, 1)
-      @trace: ">" + split.return$[i] + "<   >" + mid$(.str$, i, 1) + "<"
+      # @trace: "|" + split.return$[i] + "|   |" + mid$(.str$, i, 1) + "|"
       .pass = 0
     endif
   endfor
