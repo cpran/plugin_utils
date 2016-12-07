@@ -122,9 +122,10 @@ endproc
 #! in:
 #!   .v$: A version string
 #! out:
-#!   .v[]:    The three numeric components
-#!   .label$: The label string
-#!   .meta$:  The metadata string
+#!   .v[]:      The three numeric components
+#!   .label$:   The label string
+#!   .meta$:    The metadata string
+#!   .version$: The composite version string
 #! ~~~
 #!
 #! Parses a version string as a semantic versioning string. These have three
@@ -169,4 +170,8 @@ procedure semver .v$
   if index_regex(.label$, "[^0-9A-Za-z-]")
     exit Not a valid label
   endif
+
+  .version$ = string$(.v[1]) + "." + string$(.v[2]) + "." + string$(.v[3]) +
+    ... if .label$ != "" then "-" + .label$ else "" fi +
+    ... if .meta$  != "" then "+" + .meta$  else "" fi
 endproc
