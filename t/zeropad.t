@@ -1,7 +1,7 @@
 include ../../plugin_tap/procedures/more.proc
 include ../procedures/utils.proc
 
-@no_plan()
+@plan: 7
 
 @zeropad: undefined, 5
 @is$: zeropad.return$, string$(undefined),

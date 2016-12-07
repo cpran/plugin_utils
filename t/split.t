@@ -1,7 +1,7 @@
 include ../../plugin_tap/procedures/more.proc
 include ../procedures/utils.proc
 
-@no_plan()
+@plan: 19
 
 string$ = ""
 @split: "",  string$
