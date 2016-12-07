@@ -201,6 +201,25 @@ procedure split (.sep$, .str$)
     endif
   until !.next
 
+  # Optional support for Strings as arrays
+  if variableExists("#.strutils.array")
+    .n = numberOfSelected()
+    for .i to .n
+      .id[.i] = selected(.i)
+    endfor
+
+    @array()
+    .id = array.id
+    for .i to .length
+      @push$: .return$[.i]
+    endfor
+
+    nocheck selectObject: undefined
+    for .i to .n
+      plusObject: .id[.i]
+    endfor
+  endif
+
   .stop_at = 0
 endproc
 
