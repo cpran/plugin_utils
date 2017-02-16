@@ -214,7 +214,7 @@ procedure split (.sep$, .str$)
       @push$: .return$[.i]
     endfor
 
-    nocheck selectObject: undefined
+    selectObject()
     for .i to .n
       plusObject: .id[.i]
     endfor
