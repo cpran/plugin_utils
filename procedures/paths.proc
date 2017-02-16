@@ -15,16 +15,24 @@
 # You should have received a copy of the GNU General Public License
 # along with utils. If not, see <http://www.gnu.org/licenses/>.
 #
-# Copyright 2016 Jose Joaquin Atria
+# Copyright 2017 Jose Joaquin Atria
 
 #! ~~~ params
 #! in:
-#!   .path$: A string to print to trace device
+#!   .path$: A string with the path to check
+#! out:
+#!   .return: True if the path is absolute
 #! ~~~
 #!
 #! ~~~ praat synopsis
 #! include path/to/path.proc
+#! @is_absolute: "/home/user"
+#! assert is_absolute.return == 1
+#! @is_absolute: "C:\home\user"
+#! assert is_absolute.return == 1
 #! ~~~
+#!
+#! Checks if a given path is absolute or not. The opposite of `@is_relative`.
 #!
 procedure is_absolute: .path$
   @normalise_path: .path$
@@ -37,11 +45,45 @@ procedure is_absolute: .path$
   endif
 endproc
 
+#! ~~~ params
+#! in:
+#!   .path$: A string with the path to check
+#! out:
+#!   .return: True if the path is relative
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! include path/to/path.proc
+#! @is_relative: "/home/user"
+#! assert is_relative.return == 0
+#! @is_relative: "C:\home\user"
+#! assert is_relative.return == 0
+#! ~~~
+#!
+#! Checks if a given path is relative or not. The opposite of `@is_absolute`.
+#!
 procedure is_relative: .path$
   @is_absolute: .path$
   .return = !is_absolute.return
 endproc
 
+#! ~~~ params
+#! in:
+#!   .path$: A string with the path to process
+#! out:
+#!   .return$: The string with the path of the parent
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! include path/to/path.proc
+#! @dirname: "/home/user/test"
+#! assert dirname.return$ == "/home/user"
+#! ~~~
+#!
+#! Finds the path one level up from the one provided. Directory separators
+#! will be normalised to `"/"` regardless of platform. Returns the empty string
+#! if given the empty string.
+#!
 procedure dirname: .path$
   @normalise_path: .path$
   .path$ = normalise_path.return$
@@ -50,6 +92,22 @@ procedure dirname: .path$
   .return$ = .path$ - basename.return$ - "/"
 endproc
 
+#! ~~~ params
+#! in:
+#!   .path$: A string with the path to process
+#! out:
+#!   .return$: The name of the last item in the path
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! include path/to/path.proc
+#! @basename: "/home/user/test"
+#! assert basename.return$ == "test"
+#! ~~~
+#!
+#! Finds the name of the last element in the path. Returns the empty string if
+#! given the empty string.
+#!
 procedure basename: .path$
   @normalise_path: .path$
   .path$ = normalise_path.return$
@@ -57,6 +115,22 @@ procedure basename: .path$
   .return$ = replace_regex$(.path$, ".*/", "", 1)
 endproc
 
+#! ~~~ params
+#! in:
+#!   .path$: A string with the path to process
+#! out:
+#!   .return$: The normalised path
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! include path/to/path.proc
+#! @normalise_path: "C:\home\user\test"
+#! assert normalise_path.return$ == "C:/home/user/test"
+#! ~~~
+#!
+#! Normalises directory separators to the `"/"` character, regardless of
+#! platform. These are correctly handled by Praat.
+#!
 procedure normalise_path: .path$
   if windows
     .return$ = replace_regex$(.path$, "\\", "/", 0)
