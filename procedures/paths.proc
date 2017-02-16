@@ -1,0 +1,66 @@
+# This script is part of the utils CPrAN plugin for Praat.
+# The latest version is available through CPrAN or at
+# <http://cpran.net/plugins/utils>
+#
+# The utils plugin is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public
+# License as published by the Free Software Foundation, either
+# version 3 of the License, or (at your option) any later version.
+#
+# The utils plugin is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with utils. If not, see <http://www.gnu.org/licenses/>.
+#
+# Copyright 2016 Jose Joaquin Atria
+
+#! ~~~ params
+#! in:
+#!   .path$: A string to print to trace device
+#! ~~~
+#!
+#! ~~~ praat synopsis
+#! include path/to/path.proc
+#! ~~~
+#!
+procedure is_absolute: .path$
+  @normalise_path: .path$
+  .path$ = normalise_path.return$
+
+  if index_regex(.path$, "^([A-Z]:)?/")
+    .return = 1
+  else
+    .return = 0
+  endif
+endproc
+
+procedure is_relative: .path$
+  @is_absolute: .path$
+  .return = !is_absolute.return
+endproc
+
+procedure dirname: .path$
+  @normalise_path: .path$
+  .path$ = normalise_path.return$
+
+  @basename: .path$
+  .return$ = .path$ - basename.return$ - "/"
+endproc
+
+procedure basename: .path$
+  @normalise_path: .path$
+  .path$ = normalise_path.return$
+
+  .return$ = replace_regex$(.path$, ".*/", "", 1)
+endproc
+
+procedure normalise_path: .path$
+  if windows
+    .return$ = replace_regex$(.path$, "\\", "/", 0)
+  else
+    .return$ = .path$
+  endif
+endproc
