@@ -1,0 +1,35 @@
+sudo: false
+
+language: perl
+
+env:
+  global:
+    - PRAAT_PLUGIN_DIR="$HOME/.praat-dir/$(echo $TRAVIS_REPO_SLUG | sed -re 's%.*/%%')"
+
+install:
+  - yes | perlbrew install-cpanm
+  - cpanm --notest https://gitlab.com/cpran/CPrAN.git
+  - cpran init
+  - cpran update
+
+before_script:
+  - cpran deps | cpran install --notest -
+  - cpran upgrade
+  - mkdir -p $HOME/.local/bin
+  - cpran install praat:6.0.28 --barren --yes --path $HOME/.local/bin
+  - chmod 755 $HOME/.local/bin/praat
+  - cpran --version
+  - echo "$PATH"
+  - cp -a "$TRAVIS_BUILD_DIR" "$PRAAT_PLUGIN_DIR"
+  - cd "$PRAAT_PLUGIN_DIR"
+
+script:
+  - cpran test --verbose
+  
+before_cache:
+  - rm -rf "$PRAAT_PLUGIN_DIR"
+  
+cache:
+  directories:
+  - $PERLBREW_ROOT
+  - $HOME/.praat-dir
