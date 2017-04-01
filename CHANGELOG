@@ -1,4 +1,6 @@
 - next: # unreleased
+  - New:
+    - Added Travis CI support
 - v0.0.23:
   - New:
     - Added procedures for path handling and mangling
