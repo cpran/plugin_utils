@@ -28,6 +28,7 @@ script:
   
 before_cache:
   - rm -rf "$PRAAT_PLUGIN_DIR"
+  - cd "$TRAVIS_BUILD_DIR"
   
 cache:
   directories:
