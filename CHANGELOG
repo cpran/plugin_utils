@@ -1,6 +1,9 @@
 - next: # unreleased
+- v0.0.24:
   - New:
     - Added Travis CI support
+    - It is now possible to disable the special behaviour of the split
+      procedure when strings@array.proc is loaded
 - v0.0.23:
   - New:
     - Added procedures for path handling and mangling
