@@ -203,21 +203,23 @@ procedure split (.sep$, .str$)
 
   # Optional support for Strings as arrays
   if variableExists("#.strutils.array")
-    .n = numberOfSelected()
-    for .i to .n
-      .id[.i] = selected(.i)
-    endfor
+    if '#.strutils.array'
+      .n = numberOfSelected()
+      for .i to .n
+        .id[.i] = selected(.i)
+      endfor
 
-    @array()
-    .id = array.id
-    for .i to .length
-      @push$: .return$[.i]
-    endfor
+      @array()
+      .id = array.id
+      for .i to .length
+        @push$: .return$[.i]
+      endfor
 
-    selectObject()
-    for .i to .n
-      plusObject: .id[.i]
-    endfor
+      selectObject()
+      for .i to .n
+        plusObject: .id[.i]
+      endfor
+    endif
   endif
 
   .stop_at = 0
