@@ -103,11 +103,9 @@ call try
 
 # This will succeed
 call try
-  ... synth = Create SpeechSynthesizer: "English", "default" 'newline$'
-  ... To Sound: "This is some text", "yes"                   'newline$'
-  ... removeObject: synth                                    'newline$'
+  ... Create iris example: 0, 0            'newline$'
 
-@is:  numberOfSelected(), 2,
+@is:  numberOfSelected(), 3,
   ... "Multiple object selection maintained from tried code"
 
 Remove
@@ -117,8 +115,8 @@ before = numberOfSelected()
 
 # This will fail
 call try
-  ... synth = Create SpeechSynthesizer: "English", "default" 'newline$'
-  ... cureCancer()                                           'newline$'
+  ... Create iris example: 0, 0            'newline$'
+  ... cureCancer()                         'newline$'
 
 select all
 @is:  numberOfSelected(), before,
@@ -130,24 +128,23 @@ before = numberOfSelected()
 # This will fail
 try.remove_on_fail = 0
 call try
-  ... synth = Create SpeechSynthesizer: "English", "default" 'newline$'
-  ... cureCancer()                                           'newline$'
+  ... Create TextGrid: 0, 1, "test", "" 'newline$'
+  ... cureCancer()                      'newline$'
 
 select all
 @cmp_ok:  numberOfSelected(), ">", before,
   ... "Objects left behind from failure"
 
 nocheck selectObject: try.new[1]
-@is$: selected$(), "SpeechSynthesizer English_default",
+@is$: selected$(), "TextGrid test",
   ... "Objects left behind is correct"
 
 Remove
 
 # This will succeed
 call try
-  ... synth = Create SpeechSynthesizer: "English", "default" \n
-  ... To Sound: "This is some text", "yes"                   \n
-  ... removeObject: synth                                    \n
+  ... Create iris example: 0, 0         \n
+  ... removeObject: selected(1)         \n
 
 @is: numberOfSelected(), 2,
   ... "Automatic newline conversion"
