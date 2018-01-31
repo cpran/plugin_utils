@@ -1,4 +1,7 @@
 - next: # unreleased
+- v0.0.25:
+  - Fixed:
+    - Removed command parameters deprecated in Praat 6.0.36
 - v0.0.24:
   - New:
     - Added Travis CI support
